@@ -17,6 +17,7 @@ typedef struct BinaryTree {
     Node_t* Root;
     size_t  Size;
     Var_t   Variables[SIZE_OF_VARIABLES];
+    bool    ChangeOptimize;
 } BinaryTree_t;
 
 #endif

@@ -23,5 +23,19 @@
 #else   
 #define MYASSERT(check, error_code, ending)
 #endif
+//===============================================================================================================
+//Write Error unclosed
+#define USER_ERROR(check, error_code, ending)                                                               \
+        do                                                                                                  \
+        {                                                                                                   \
+            if (!(check))                                                                                   \
+            {                                                                                               \
+                fprintf(stderr, RED ">>>>> Error! Error code: %s <<<<<\n", ArrayOfErrors[error_code]);      \
+                fprintf(stderr, "In File: %s, In Line: %d, In Function: %s\n",__FILE__,__LINE__,__PRETTY_FUNCTION__);\
+                fprintf(stderr, "In this condition:\t\"%s\"\n\n" RESET, #check);                            \
+                ending;                                                                                     \
+            }                                                                                               \
+        }                                                                                                   \
+        while(0);
 
 #endif

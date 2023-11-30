@@ -6,6 +6,7 @@
 #include "tree.h"
 #include "tree_functions.h"
 #include "log.h"
+#include "parsing.h"
 #include "functions.h"
 #include "myassert.h"
 
@@ -13,22 +14,25 @@ int main(int argc, char *argv[])
 {
     if (argc == 2)
     {
-        printf(GREEN "\n<<<Файл для сохранения базы данных: %s>\n" RESET, argv[1]);
+        printf(GREEN "\n<<<FILE TO IN/OUT: %s>\n" RESET, argv[1]);
     }
 
     BinaryTree_t myTree = {};
     TreeCtor (&myTree);
     PrintLogStart ();
     PrintLogTree (&myTree);
-    fprintf(stdout, GREEN "Загрузка завершена!\n\n" RESET);
+    fprintf(stdout, GREEN "Download completed!\n\n" RESET);
     //==================================================================
-    fprintf(stdout, GREEN "Загрузка базы данных...\n" RESET);
+    fprintf(stdout, GREEN "Download Data base...\n" RESET);
     UploadDataBase(&myTree, argv[1]);
-    fprintf(stdout, GREEN "Загрузка базы данных завершена!\n\n" RESET);
+    fprintf(stdout, GREEN "Downloading complete!\n\n" RESET);
     PrintLogTree (&myTree);
     //==================================================================
     TreeInOrder(&myTree, stdout);
+    TreeOptimize(&myTree);
+    PrintLogTree (&myTree);
     EnterVariables(&myTree);
+    TreeCalculating(&myTree);
     //==================================================================
     PrintLogFinish();
     TreeDtor (&myTree);

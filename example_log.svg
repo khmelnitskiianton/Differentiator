@@ -1,151 +1,129 @@
-<svg width="484pt" height="589pt"
- viewBox="0.00 0.00 484.00 589.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 585)">
+<svg width="484pt" height="457pt"
+ viewBox="0.00 0.00 484.00 457.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 453)">
 <title>G</title>
-<polygon fill="#ff7f50" stroke="transparent" points="-4,4 -4,-585 480,-585 480,4 -4,4"/>
+<polygon fill="#fffacd" stroke="transparent" points="-4,4 -4,-453 480,-453 480,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_list</title>
-<polygon fill="#ff7f50" stroke="#800080" stroke-dasharray="5,2" points="8,-8 8,-516 468,-516 468,-8 8,-8"/>
+<polygon fill="#fffacd" stroke="#483d8b" stroke-dasharray="5,2" points="8,-8 8,-384 468,-384 468,-8 8,-8"/>
+</g>
+<!-- node0x604000000010 -->
+<g id="node1" class="node">
+<title>node0x604000000010</title>
+<path fill="#40e0d0" stroke="#000000" d="M145.5,-280.5C145.5,-280.5 396.5,-280.5 396.5,-280.5 402.5,-280.5 408.5,-286.5 408.5,-292.5 408.5,-292.5 408.5,-363.5 408.5,-363.5 408.5,-369.5 402.5,-375.5 396.5,-375.5 396.5,-375.5 145.5,-375.5 145.5,-375.5 139.5,-375.5 133.5,-369.5 133.5,-363.5 133.5,-363.5 133.5,-292.5 133.5,-292.5 133.5,-286.5 139.5,-280.5 145.5,-280.5"/>
+<text text-anchor="middle" x="271" y="-363.5" font-family="Times,serif" font-size="10.00">PARENT: (nil)</text>
+<polyline fill="none" stroke="#000000" points="133.5,-356.5 408.5,-356.5 "/>
+<text text-anchor="middle" x="271" y="-344.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000010</text>
+<polyline fill="none" stroke="#000000" points="133.5,-337.5 408.5,-337.5 "/>
+<text text-anchor="middle" x="271" y="-325.5" font-family="Times,serif" font-size="10.00">TYPE: 2</text>
+<polyline fill="none" stroke="#000000" points="133.5,-318.5 408.5,-318.5 "/>
+<text text-anchor="middle" x="271" y="-306.5" font-family="Times,serif" font-size="10.00">DATA: *</text>
+<polyline fill="none" stroke="#000000" points="133.5,-299.5 408.5,-299.5 "/>
+<text text-anchor="middle" x="200.5" y="-287.5" font-family="Times,serif" font-size="10.00">LEFT: 0x604000000050</text>
+<polyline fill="none" stroke="#000000" points="267.5,-280.5 267.5,-299.5 "/>
+<text text-anchor="middle" x="338" y="-287.5" font-family="Times,serif" font-size="10.00">RIGHT: 0x604000000110</text>
 </g>
 <!-- node0x604000000050 -->
-<g id="node1" class="node">
-<title>node0x604000000050</title>
-<path fill="#66ffff" stroke="#800000" d="M145.5,-412.5C145.5,-412.5 396.5,-412.5 396.5,-412.5 402.5,-412.5 408.5,-418.5 408.5,-424.5 408.5,-424.5 408.5,-495.5 408.5,-495.5 408.5,-501.5 402.5,-507.5 396.5,-507.5 396.5,-507.5 145.5,-507.5 145.5,-507.5 139.5,-507.5 133.5,-501.5 133.5,-495.5 133.5,-495.5 133.5,-424.5 133.5,-424.5 133.5,-418.5 139.5,-412.5 145.5,-412.5"/>
-<text text-anchor="middle" x="271" y="-495.5" font-family="Times,serif" font-size="10.00">PARENT: (nil)</text>
-<polyline fill="none" stroke="#800000" points="133.5,-488.5 408.5,-488.5 "/>
-<text text-anchor="middle" x="271" y="-476.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000050</text>
-<polyline fill="none" stroke="#800000" points="133.5,-469.5 408.5,-469.5 "/>
-<text text-anchor="middle" x="271" y="-457.5" font-family="Times,serif" font-size="10.00">TYPE: 2</text>
-<polyline fill="none" stroke="#800000" points="133.5,-450.5 408.5,-450.5 "/>
-<text text-anchor="middle" x="271" y="-438.5" font-family="Times,serif" font-size="10.00">DATA: *</text>
-<polyline fill="none" stroke="#800000" points="133.5,-431.5 408.5,-431.5 "/>
-<text text-anchor="middle" x="200.5" y="-419.5" font-family="Times,serif" font-size="10.00">LEFT: 0x604000000090</text>
-<polyline fill="none" stroke="#800000" points="267.5,-412.5 267.5,-431.5 "/>
-<text text-anchor="middle" x="338" y="-419.5" font-family="Times,serif" font-size="10.00">RIGHT: 0x604000000190</text>
-</g>
-<!-- node0x604000000090 -->
 <g id="node2" class="node">
-<title>node0x604000000090</title>
-<path fill="#66ffff" stroke="#800000" d="M28.5,-280.5C28.5,-280.5 279.5,-280.5 279.5,-280.5 285.5,-280.5 291.5,-286.5 291.5,-292.5 291.5,-292.5 291.5,-363.5 291.5,-363.5 291.5,-369.5 285.5,-375.5 279.5,-375.5 279.5,-375.5 28.5,-375.5 28.5,-375.5 22.5,-375.5 16.5,-369.5 16.5,-363.5 16.5,-363.5 16.5,-292.5 16.5,-292.5 16.5,-286.5 22.5,-280.5 28.5,-280.5"/>
-<text text-anchor="middle" x="154" y="-363.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000050</text>
-<polyline fill="none" stroke="#800000" points="16.5,-356.5 291.5,-356.5 "/>
-<text text-anchor="middle" x="154" y="-344.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000090</text>
-<polyline fill="none" stroke="#800000" points="16.5,-337.5 291.5,-337.5 "/>
-<text text-anchor="middle" x="154" y="-325.5" font-family="Times,serif" font-size="10.00">TYPE: 2</text>
-<polyline fill="none" stroke="#800000" points="16.5,-318.5 291.5,-318.5 "/>
-<text text-anchor="middle" x="154" y="-306.5" font-family="Times,serif" font-size="10.00">DATA: /</text>
-<polyline fill="none" stroke="#800000" points="16.5,-299.5 291.5,-299.5 "/>
-<text text-anchor="middle" x="83.5" y="-287.5" font-family="Times,serif" font-size="10.00">LEFT: 0x6040000000d0</text>
-<polyline fill="none" stroke="#800000" points="150.5,-280.5 150.5,-299.5 "/>
-<text text-anchor="middle" x="221" y="-287.5" font-family="Times,serif" font-size="10.00">RIGHT: 0x604000000110</text>
+<title>node0x604000000050</title>
+<path fill="#40e0d0" stroke="#000000" d="M28,-148.5C28,-148.5 280,-148.5 280,-148.5 286,-148.5 292,-154.5 292,-160.5 292,-160.5 292,-231.5 292,-231.5 292,-237.5 286,-243.5 280,-243.5 280,-243.5 28,-243.5 28,-243.5 22,-243.5 16,-237.5 16,-231.5 16,-231.5 16,-160.5 16,-160.5 16,-154.5 22,-148.5 28,-148.5"/>
+<text text-anchor="middle" x="154" y="-231.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000010</text>
+<polyline fill="none" stroke="#000000" points="16,-224.5 292,-224.5 "/>
+<text text-anchor="middle" x="154" y="-212.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000050</text>
+<polyline fill="none" stroke="#000000" points="16,-205.5 292,-205.5 "/>
+<text text-anchor="middle" x="154" y="-193.5" font-family="Times,serif" font-size="10.00">TYPE: 2</text>
+<polyline fill="none" stroke="#000000" points="16,-186.5 292,-186.5 "/>
+<text text-anchor="middle" x="154" y="-174.5" font-family="Times,serif" font-size="10.00">DATA: /</text>
+<polyline fill="none" stroke="#000000" points="16,-167.5 292,-167.5 "/>
+<text text-anchor="middle" x="83" y="-155.5" font-family="Times,serif" font-size="10.00">LEFT: 0x604000000090</text>
+<polyline fill="none" stroke="#000000" points="150,-148.5 150,-167.5 "/>
+<text text-anchor="middle" x="221" y="-155.5" font-family="Times,serif" font-size="10.00">RIGHT: 0x6040000000d0</text>
 </g>
-<!-- node0x604000000050&#45;&gt;node0x604000000090 -->
-<g id="edge4" class="edge">
-<title>node0x604000000050:f0&#45;&gt;node0x604000000090</title>
-<path fill="none" stroke="#000000" d="M132,-422C113.74,-422 115.25,-404.81 122.9,-385.21"/>
-<polygon fill="#000000" stroke="#000000" points="126.22,-386.34 126.95,-375.77 119.79,-383.58 126.22,-386.34"/>
-</g>
-<!-- node0x604000000190 -->
-<g id="node6" class="node">
-<title>node0x604000000190</title>
-<path fill="#ffff66" stroke="#000000" d="M322,-280.5C322,-280.5 448,-280.5 448,-280.5 454,-280.5 460,-286.5 460,-292.5 460,-292.5 460,-363.5 460,-363.5 460,-369.5 454,-375.5 448,-375.5 448,-375.5 322,-375.5 322,-375.5 316,-375.5 310,-369.5 310,-363.5 310,-363.5 310,-292.5 310,-292.5 310,-286.5 316,-280.5 322,-280.5"/>
-<text text-anchor="middle" x="385" y="-363.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000050</text>
-<polyline fill="none" stroke="#000000" points="310,-356.5 460,-356.5 "/>
-<text text-anchor="middle" x="385" y="-344.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000190</text>
-<polyline fill="none" stroke="#000000" points="310,-337.5 460,-337.5 "/>
-<text text-anchor="middle" x="385" y="-325.5" font-family="Times,serif" font-size="10.00">TYPE: 3</text>
-<polyline fill="none" stroke="#000000" points="310,-318.5 460,-318.5 "/>
-<text text-anchor="middle" x="385" y="-306.5" font-family="Times,serif" font-size="10.00">DATA: suka</text>
-<polyline fill="none" stroke="#000000" points="310,-299.5 460,-299.5 "/>
-<text text-anchor="middle" x="345.5" y="-287.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
-<polyline fill="none" stroke="#000000" points="381,-280.5 381,-299.5 "/>
-<text text-anchor="middle" x="420.5" y="-287.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
-</g>
-<!-- node0x604000000050&#45;&gt;node0x604000000190 -->
-<g id="edge5" class="edge">
-<title>node0x604000000050:f1&#45;&gt;node0x604000000190</title>
-<path fill="none" stroke="#000000" d="M410,-422C428.49,-422 426.34,-404.65 417.94,-384.94"/>
-<polygon fill="#000000" stroke="#000000" points="421.07,-383.37 413.69,-375.77 414.72,-386.32 421.07,-383.37"/>
-</g>
-<!-- node0x6040000000d0 -->
-<g id="node3" class="node">
-<title>node0x6040000000d0</title>
-<path fill="#ffff66" stroke="#000000" d="M28,-148.5C28,-148.5 154,-148.5 154,-148.5 160,-148.5 166,-154.5 166,-160.5 166,-160.5 166,-231.5 166,-231.5 166,-237.5 160,-243.5 154,-243.5 154,-243.5 28,-243.5 28,-243.5 22,-243.5 16,-237.5 16,-231.5 16,-231.5 16,-160.5 16,-160.5 16,-154.5 22,-148.5 28,-148.5"/>
-<text text-anchor="middle" x="91" y="-231.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000090</text>
-<polyline fill="none" stroke="#000000" points="16,-224.5 166,-224.5 "/>
-<text text-anchor="middle" x="91" y="-212.5" font-family="Times,serif" font-size="10.00">PTR: 0x6040000000d0</text>
-<polyline fill="none" stroke="#000000" points="16,-205.5 166,-205.5 "/>
-<text text-anchor="middle" x="91" y="-193.5" font-family="Times,serif" font-size="10.00">TYPE: 3</text>
-<polyline fill="none" stroke="#000000" points="16,-186.5 166,-186.5 "/>
-<text text-anchor="middle" x="91" y="-174.5" font-family="Times,serif" font-size="10.00">DATA: aboba</text>
-<polyline fill="none" stroke="#000000" points="16,-167.5 166,-167.5 "/>
-<text text-anchor="middle" x="51.5" y="-155.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
-<polyline fill="none" stroke="#000000" points="87,-148.5 87,-167.5 "/>
-<text text-anchor="middle" x="126.5" y="-155.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
-</g>
-<!-- node0x604000000090&#45;&gt;node0x6040000000d0 -->
-<g id="edge1" class="edge">
-<title>node0x604000000090:f0&#45;&gt;node0x6040000000d0</title>
-<path fill="none" stroke="#000000" d="M83,-280C83,-271.57 83.41,-262.68 84.05,-253.98"/>
-<polygon fill="#000000" stroke="#000000" points="87.55,-254.15 84.9,-243.89 80.58,-253.57 87.55,-254.15"/>
+<!-- node0x604000000010&#45;&gt;node0x604000000050 -->
+<g id="edge3" class="edge">
+<title>node0x604000000010:f0&#45;&gt;node0x604000000050</title>
+<path fill="none" stroke="#000000" d="M132,-290C113.74,-290 115.25,-272.81 122.9,-253.21"/>
+<polygon fill="#000000" stroke="#000000" points="126.22,-254.34 126.95,-243.77 119.79,-251.58 126.22,-254.34"/>
 </g>
 <!-- node0x604000000110 -->
-<g id="node4" class="node">
-<title>node0x604000000110</title>
-<path fill="#66ffff" stroke="#800000" d="M196.5,-148.5C196.5,-148.5 383.5,-148.5 383.5,-148.5 389.5,-148.5 395.5,-154.5 395.5,-160.5 395.5,-160.5 395.5,-231.5 395.5,-231.5 395.5,-237.5 389.5,-243.5 383.5,-243.5 383.5,-243.5 196.5,-243.5 196.5,-243.5 190.5,-243.5 184.5,-237.5 184.5,-231.5 184.5,-231.5 184.5,-160.5 184.5,-160.5 184.5,-154.5 190.5,-148.5 196.5,-148.5"/>
-<text text-anchor="middle" x="290" y="-231.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000090</text>
-<polyline fill="none" stroke="#800000" points="184.5,-224.5 395.5,-224.5 "/>
-<text text-anchor="middle" x="290" y="-212.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000110</text>
-<polyline fill="none" stroke="#800000" points="184.5,-205.5 395.5,-205.5 "/>
-<text text-anchor="middle" x="290" y="-193.5" font-family="Times,serif" font-size="10.00">TYPE: 2</text>
-<polyline fill="none" stroke="#800000" points="184.5,-186.5 395.5,-186.5 "/>
-<text text-anchor="middle" x="290" y="-174.5" font-family="Times,serif" font-size="10.00">DATA: sin</text>
-<polyline fill="none" stroke="#800000" points="184.5,-167.5 395.5,-167.5 "/>
-<text text-anchor="middle" x="251.5" y="-155.5" font-family="Times,serif" font-size="10.00">LEFT: 0x604000000150</text>
-<polyline fill="none" stroke="#800000" points="318.5,-148.5 318.5,-167.5 "/>
-<text text-anchor="middle" x="357" y="-155.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
-</g>
-<!-- node0x604000000090&#45;&gt;node0x604000000110 -->
-<g id="edge3" class="edge">
-<title>node0x604000000090:f1&#45;&gt;node0x604000000110</title>
-<path fill="none" stroke="#000000" d="M293,-290C301.81,-290 302.57,-273.12 300.54,-253.74"/>
-<polygon fill="#000000" stroke="#000000" points="304,-253.26 299.29,-243.77 297.06,-254.13 304,-253.26"/>
-</g>
-<!-- node0x604000000150 -->
 <g id="node5" class="node">
-<title>node0x604000000150</title>
-<path fill="#66ff00" stroke="#800000" d="M188,-16.5C188,-16.5 314,-16.5 314,-16.5 320,-16.5 326,-22.5 326,-28.5 326,-28.5 326,-99.5 326,-99.5 326,-105.5 320,-111.5 314,-111.5 314,-111.5 188,-111.5 188,-111.5 182,-111.5 176,-105.5 176,-99.5 176,-99.5 176,-28.5 176,-28.5 176,-22.5 182,-16.5 188,-16.5"/>
-<text text-anchor="middle" x="251" y="-99.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000110</text>
-<polyline fill="none" stroke="#800000" points="176,-92.5 326,-92.5 "/>
-<text text-anchor="middle" x="251" y="-80.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000150</text>
-<polyline fill="none" stroke="#800000" points="176,-73.5 326,-73.5 "/>
-<text text-anchor="middle" x="251" y="-61.5" font-family="Times,serif" font-size="10.00">TYPE: 1</text>
-<polyline fill="none" stroke="#800000" points="176,-54.5 326,-54.5 "/>
-<text text-anchor="middle" x="251" y="-42.5" font-family="Times,serif" font-size="10.00">DATA: 1.000</text>
-<polyline fill="none" stroke="#800000" points="176,-35.5 326,-35.5 "/>
-<text text-anchor="middle" x="211.5" y="-23.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
-<polyline fill="none" stroke="#800000" points="247,-16.5 247,-35.5 "/>
-<text text-anchor="middle" x="286.5" y="-23.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
+<title>node0x604000000110</title>
+<path fill="#9acd32" stroke="#000000" d="M322,-148.5C322,-148.5 448,-148.5 448,-148.5 454,-148.5 460,-154.5 460,-160.5 460,-160.5 460,-231.5 460,-231.5 460,-237.5 454,-243.5 448,-243.5 448,-243.5 322,-243.5 322,-243.5 316,-243.5 310,-237.5 310,-231.5 310,-231.5 310,-160.5 310,-160.5 310,-154.5 316,-148.5 322,-148.5"/>
+<text text-anchor="middle" x="385" y="-231.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000010</text>
+<polyline fill="none" stroke="#000000" points="310,-224.5 460,-224.5 "/>
+<text text-anchor="middle" x="385" y="-212.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000110</text>
+<polyline fill="none" stroke="#000000" points="310,-205.5 460,-205.5 "/>
+<text text-anchor="middle" x="385" y="-193.5" font-family="Times,serif" font-size="10.00">TYPE: 1</text>
+<polyline fill="none" stroke="#000000" points="310,-186.5 460,-186.5 "/>
+<text text-anchor="middle" x="385" y="-174.5" font-family="Times,serif" font-size="10.00">DATA: 6.000</text>
+<polyline fill="none" stroke="#000000" points="310,-167.5 460,-167.5 "/>
+<text text-anchor="middle" x="345.5" y="-155.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
+<polyline fill="none" stroke="#000000" points="381,-148.5 381,-167.5 "/>
+<text text-anchor="middle" x="420.5" y="-155.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
 </g>
-<!-- node0x604000000110&#45;&gt;node0x604000000150 -->
+<!-- node0x604000000010&#45;&gt;node0x604000000110 -->
+<g id="edge4" class="edge">
+<title>node0x604000000010:f1&#45;&gt;node0x604000000110</title>
+<path fill="none" stroke="#000000" d="M410,-290C428.49,-290 426.34,-272.65 417.94,-252.94"/>
+<polygon fill="#000000" stroke="#000000" points="421.07,-251.37 413.69,-243.77 414.72,-254.32 421.07,-251.37"/>
+</g>
+<!-- node0x604000000090 -->
+<g id="node3" class="node">
+<title>node0x604000000090</title>
+<path fill="#9acd32" stroke="#000000" d="M28,-16.5C28,-16.5 154,-16.5 154,-16.5 160,-16.5 166,-22.5 166,-28.5 166,-28.5 166,-99.5 166,-99.5 166,-105.5 160,-111.5 154,-111.5 154,-111.5 28,-111.5 28,-111.5 22,-111.5 16,-105.5 16,-99.5 16,-99.5 16,-28.5 16,-28.5 16,-22.5 22,-16.5 28,-16.5"/>
+<text text-anchor="middle" x="91" y="-99.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000050</text>
+<polyline fill="none" stroke="#000000" points="16,-92.5 166,-92.5 "/>
+<text text-anchor="middle" x="91" y="-80.5" font-family="Times,serif" font-size="10.00">PTR: 0x604000000090</text>
+<polyline fill="none" stroke="#000000" points="16,-73.5 166,-73.5 "/>
+<text text-anchor="middle" x="91" y="-61.5" font-family="Times,serif" font-size="10.00">TYPE: 1</text>
+<polyline fill="none" stroke="#000000" points="16,-54.5 166,-54.5 "/>
+<text text-anchor="middle" x="91" y="-42.5" font-family="Times,serif" font-size="10.00">DATA: 4.000</text>
+<polyline fill="none" stroke="#000000" points="16,-35.5 166,-35.5 "/>
+<text text-anchor="middle" x="51.5" y="-23.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
+<polyline fill="none" stroke="#000000" points="87,-16.5 87,-35.5 "/>
+<text text-anchor="middle" x="126.5" y="-23.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
+</g>
+<!-- node0x604000000050&#45;&gt;node0x604000000090 -->
+<g id="edge1" class="edge">
+<title>node0x604000000050:f0&#45;&gt;node0x604000000090</title>
+<path fill="none" stroke="#000000" d="M83,-148C83,-139.57 83.41,-130.68 84.05,-121.98"/>
+<polygon fill="#000000" stroke="#000000" points="87.55,-122.15 84.9,-111.89 80.58,-121.57 87.55,-122.15"/>
+</g>
+<!-- node0x6040000000d0 -->
+<g id="node4" class="node">
+<title>node0x6040000000d0</title>
+<path fill="#9acd32" stroke="#000000" d="M196,-16.5C196,-16.5 322,-16.5 322,-16.5 328,-16.5 334,-22.5 334,-28.5 334,-28.5 334,-99.5 334,-99.5 334,-105.5 328,-111.5 322,-111.5 322,-111.5 196,-111.5 196,-111.5 190,-111.5 184,-105.5 184,-99.5 184,-99.5 184,-28.5 184,-28.5 184,-22.5 190,-16.5 196,-16.5"/>
+<text text-anchor="middle" x="259" y="-99.5" font-family="Times,serif" font-size="10.00">PARENT: 0x604000000050</text>
+<polyline fill="none" stroke="#000000" points="184,-92.5 334,-92.5 "/>
+<text text-anchor="middle" x="259" y="-80.5" font-family="Times,serif" font-size="10.00">PTR: 0x6040000000d0</text>
+<polyline fill="none" stroke="#000000" points="184,-73.5 334,-73.5 "/>
+<text text-anchor="middle" x="259" y="-61.5" font-family="Times,serif" font-size="10.00">TYPE: 1</text>
+<polyline fill="none" stroke="#000000" points="184,-54.5 334,-54.5 "/>
+<text text-anchor="middle" x="259" y="-42.5" font-family="Times,serif" font-size="10.00">DATA: 2.000</text>
+<polyline fill="none" stroke="#000000" points="184,-35.5 334,-35.5 "/>
+<text text-anchor="middle" x="219.5" y="-23.5" font-family="Times,serif" font-size="10.00">LEFT: (nil)</text>
+<polyline fill="none" stroke="#000000" points="255,-16.5 255,-35.5 "/>
+<text text-anchor="middle" x="294.5" y="-23.5" font-family="Times,serif" font-size="10.00">RIGHT: (nil)</text>
+</g>
+<!-- node0x604000000050&#45;&gt;node0x6040000000d0 -->
 <g id="edge2" class="edge">
-<title>node0x604000000110:f0&#45;&gt;node0x604000000150</title>
-<path fill="none" stroke="#000000" d="M251,-148C251,-139.51 251,-130.53 251,-121.73"/>
-<polygon fill="#000000" stroke="#000000" points="254.5,-121.53 251,-111.53 247.5,-121.53 254.5,-121.53"/>
+<title>node0x604000000050:f1&#45;&gt;node0x6040000000d0</title>
+<path fill="none" stroke="#000000" d="M221,-148C221,-139.02 222.86,-129.95 225.76,-121.26"/>
+<polygon fill="#000000" stroke="#000000" points="229.14,-122.24 229.43,-111.65 222.6,-119.74 229.14,-122.24"/>
 </g>
 <!-- All -->
-<g id="node7" class="node">
+<g id="node6" class="node">
 <title>All</title>
-<path fill="#ffe4c4" stroke="#800000" d="M154,-544.5C154,-544.5 324,-544.5 324,-544.5 330,-544.5 336,-550.5 336,-556.5 336,-556.5 336,-568.5 336,-568.5 336,-574.5 330,-580.5 324,-580.5 324,-580.5 154,-580.5 154,-580.5 148,-580.5 142,-574.5 142,-568.5 142,-568.5 142,-556.5 142,-556.5 142,-550.5 148,-544.5 154,-544.5"/>
-<text text-anchor="middle" x="174" y="-560" font-family="Times,serif" font-size="10.00">HEADER</text>
-<polyline fill="none" stroke="#800000" points="206,-544.5 206,-580.5 "/>
-<text text-anchor="middle" x="271" y="-560" font-family="Times,serif" font-size="10.00">Root: 0x604000000050</text>
+<path fill="#ffa07a" stroke="#000000" d="M154,-412.5C154,-412.5 324,-412.5 324,-412.5 330,-412.5 336,-418.5 336,-424.5 336,-424.5 336,-436.5 336,-436.5 336,-442.5 330,-448.5 324,-448.5 324,-448.5 154,-448.5 154,-448.5 148,-448.5 142,-442.5 142,-436.5 142,-436.5 142,-424.5 142,-424.5 142,-418.5 148,-412.5 154,-412.5"/>
+<text text-anchor="middle" x="174" y="-428" font-family="Times,serif" font-size="10.00">HEADER</text>
+<polyline fill="none" stroke="#000000" points="206,-412.5 206,-448.5 "/>
+<text text-anchor="middle" x="271" y="-428" font-family="Times,serif" font-size="10.00">Root: 0x604000000010</text>
 </g>
-<!-- All&#45;&gt;node0x604000000050 -->
-<g id="edge6" class="edge">
-<title>All:f0&#45;&gt;node0x604000000050</title>
-<path fill="none" stroke="#ffffff" d="M271,-544C271,-535.51 271,-526.53 271,-517.73"/>
-<polygon fill="#ffffff" stroke="#ffffff" points="274.5,-517.53 271,-507.53 267.5,-517.53 274.5,-517.53"/>
+<!-- All&#45;&gt;node0x604000000010 -->
+<g id="edge5" class="edge">
+<title>All:f0&#45;&gt;node0x604000000010</title>
+<path fill="none" stroke="#000000" d="M271,-412C271,-403.51 271,-394.53 271,-385.73"/>
+<polygon fill="#000000" stroke="#000000" points="274.5,-385.53 271,-375.53 267.5,-385.53 274.5,-385.53"/>
 </g>
 </g>
 </svg>

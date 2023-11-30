@@ -9,20 +9,21 @@
 #include "tree.h"
 #include "calculation.h"
 #include "tree_functions.h"
+#include "parsing.h"
 #include "functions.h"
 #include "log.h"
 #include "myassert.h"
 #include "verificator.h"
 
-size_t FileSize (FILE *file_text)
-{
-    MYASSERT(file_text, ERR_BAD_POINTER_FILE, return 0)
-	struct stat st;
-    int fd = fileno (file_text); 
-    fstat (fd, &st);
-    size_t size_text = (size_t) st.st_size;
-	return size_text;
-}
+static void   clean_buffer (void);
+static void   PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree);
+static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree);
+static bool   Compare (double x, double y);
+static void   RecFree (Node_t* CurrentNode);
+static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree);
+static bool         RecOptimizeConst(Node_t* CurrentNode, BinaryTree_t* myTree);
+static EnumOfErrors DeleteNeutralNode(Node_t* NeutralNode, Node_t* BranchNode, BinaryTree_t* myTree);
+static EnumOfErrors DeleteNeutralBranch(Node_t* CurrentNode, double NewValue);
 
 EnumOfErrors TreeInOrder (BinaryTree_t* myTree, FILE* filestream)
 {
@@ -34,10 +35,11 @@ EnumOfErrors TreeInOrder (BinaryTree_t* myTree, FILE* filestream)
     MYASSERT(myTree, ERR_BAD_POINTER_TREE, return ERR_BAD_POINTER_TREE)
     Verify(myTree);
     PrintInNode(myTree->Root, filestream, myTree);
+    fprintf(filestream, "\n");
     return ERR_OK;
 }
 
-void PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree)
+static void PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree)
 {
     if (!CurrentNode) {fprintf(filestream, "_"); return;}
     fprintf(filestream, "(");
@@ -67,210 +69,196 @@ void PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree)
     fprintf(filestream, ")");
 }
 
-EnumOfErrors UploadDataBase (BinaryTree_t* myTree, const char* file_database)
-{
-    MYASSERT(myTree, ERR_BAD_POINTER_TREE, return ERR_BAD_POINTER_TREE)
-    MYASSERT(file_database, ERR_WHAT_FILE_OF_DATA, return ERR_WHAT_FILE_OF_DATA)
-
-    FILE* FileRead = OpenFile (file_database, "r");
-
-    size_t size_text = FileSize (FileRead);
-
-    char* text_buffer = NULL;
-    text_buffer = (char*) calloc (size_text + 1, sizeof (char));
-    MYASSERT(text_buffer, ERR_BAD_CALLOC, return ERR_BAD_CALLOC)
-    size_t result_size = fread (text_buffer, 1, size_text, FileRead);
-
-    MYASSERT(result_size == size_text, ERR_BAD_FREAD, return ERR_BAD_FREAD);
-
-    if (*text_buffer == '\0') 
-    {
-        fprintf(stdout, YELLOW "База данных пуста!\n" RESET);
-        return ERR_OK;
-    }
-
-	*(text_buffer + size_text) = '\0';
-    CloseFile (FileRead);
-
-    printf("\n%s\n", text_buffer);
-
-    size_t position = 0;
-    RecScanData(&position, text_buffer, NULL, myTree->Root, myTree);
-
-    free(text_buffer);
-
-    return ERR_OK;   
-}
-
-EnumOfErrors RecScanData(size_t* position, const char* text_buffer, Node_t** ResNode, Node_t* CurrentNode, BinaryTree_t* myTree)
-{
-    //printf("Найден0: %c %d\n", *(text_buffer + *position), *position);
-    *position = SkipSpaces (*position, text_buffer); //пропускаем пробелы
-    if (!strncmp((text_buffer + *position), "_", 1))
-    {
-        //дальше поддерево - пустота
-        *position = *position + 1;
-        *position = SkipSpaces (*position, text_buffer);
-        return ERR_OK;
-    }
-    //нашли открывающуюся скобочку
-    if (*(text_buffer + *position) == '(')
-    {
-        //создание в начале
-        char object_buffer[SIZE_OF_BUFFER] = {};
-        Node_t* NewNode = CreateNode(myTree);
-
-        (*position)++;
-        *position = SkipSpaces (*position, text_buffer); //пропускаем пробелы
-
-        EnumOfErrors result = ERR_OK; 
-
-        //1. Считываем ЛЕВО
-        result = RecScanData(position, text_buffer, &NewNode->Left, NewNode, myTree);
-        MYASSERT(result == ERR_OK, ERR_BAD_REC_SCAN, return ERR_BAD_REC_SCAN);
-        *position = SkipSpaces (*position, text_buffer);
-
-        //2. Пытаемся считать значение
-        
-        //PrintLogTree (myTree);
-        //printf("Найден1: %c %d\n", *(text_buffer + *position), *position);
-        size_t shift = 0;
-
-        while (isalnum(*(text_buffer + *position)) || (CharInOperators(*(text_buffer + *position)) != -1) || (*(text_buffer + *position) == '.')) 
-        {
-            //printf("Найден2: %c %d\n", *(text_buffer + *position), *position);
-            MYASSERT(shift < SIZE_OF_BUFFER, ERR_OVERFLOW_BUFF, return ERR_OVERFLOW_BUFF)
-            *(object_buffer + shift) = *(text_buffer + *position);
-            shift++;
-            (*position)++;
-        }
-        //printf("Найден3: %c %d\n", *(text_buffer + *position), *position);
-        result = ProcessObject(object_buffer, NewNode, myTree); //обработка значения прочитанного
-        MYASSERT(result == ERR_OK, ERR_PROCESS_OBJECT, return ERR_PROCESS_OBJECT);
-
-        CleanCharBuffer(object_buffer, SIZE_OF_BUFFER);
-        *position = SkipSpaces (*position, text_buffer);
-
-        //Пересвязка
-        NewNode->Parent = CurrentNode;//подвязка от предыдущего
-        if (CurrentNode)//проверка на корень
-        {
-            *ResNode = NewNode; //подвязка прошлого к новому
-        }
-        else
-        {
-            myTree->Root = NewNode;
-        }
-
-        //3. Считываем ПРАВО
-        result = RecScanData(position, text_buffer, &NewNode->Right, NewNode, myTree);
-        MYASSERT(result == ERR_OK, ERR_BAD_REC_SCAN, return ERR_BAD_REC_SCAN);
-        *position = SkipSpaces (*position, text_buffer);
-        //printf("Найден4: %c %d\n", *(text_buffer + *position), *position);
-        //4. Закрытие
-        if (*(text_buffer + *position) == ')')
-        {
-            (*position)++;
-            return ERR_OK;
-        }
-        else
-        {
-            MYASSERT(0, ERR_NO_CLOSE_BRACKET_NODE, return ERR_NO_CLOSE_BRACKET_NODE)
-        }
-    }
-    else
-    {
-        MYASSERT(0, ERR_NO_OPEN_BRACKET_NODE, return ERR_NO_OPEN_BRACKET_NODE)
-    }
-}
-
-size_t SkipSpaces(size_t current_position, const char* text_buffer)
-{
-    size_t end_position = current_position;
-    MYASSERT(text_buffer, ERR_BAD_POINTER_DATA, return 0)
-    while (isspace(*(text_buffer + end_position)) && (*(text_buffer + end_position) != '\0')) { end_position++; }
-    return end_position;
-}
-
-int CharInOperators(const char ch)
-{
-    for (size_t i = 0; i < SIZE_OF_OPERATORS; i++)
-    {
-        if (Operators[i].Name[0] == ch) return (int) i;
-    }
-    return NOT_IN_OPER;
-}
-
-int StrInOperators(const char* str)
-{
-    for (size_t i = 0; i < SIZE_OF_OPERATORS; i++)
-    {
-        if (!strcmp(Operators[i].Name, str)) return (int) i;
-    }
-    return NOT_IN_OPER;
-}
-
-EnumOfErrors ProcessObject (char* object_buffer, Node_t* NewNode, BinaryTree_t* myTree)
-{
-    //в буффере лежит наш аргумент: sin, aboba, 123.00, /*+-
-    double new_value = NAN;
-    if (sscanf(object_buffer, SPECIFIER_SCANF, &new_value) == 1)  //если цифра 100% число
-    {
-        NewNode->Value.Number = new_value;
-        NewNode->Type          = NUMBER;
-        return ERR_OK;
-    }
-    int index_operator = -1;
-    if ((index_operator = StrInOperators(object_buffer)) != -1)   //если символ оператора то 100% оператор
-    {
-        NewNode->Value.Index = index_operator; //вернул индекс в массиве операторов!
-        NewNode->Type         = OPERATOR;
-        return ERR_OK;
-    }
-    int index_variable = -1;   //если иное то переменная
-    index_variable = InsertVariable (object_buffer, myTree);  //позиции в буфере
-    NewNode->Value.Index     = index_variable;
-    NewNode->Type             = VARIABLE;
-
-    MYASSERT(index_variable != -1, ERR_PROCESS_OBJECT, return ERR_PROCESS_OBJECT)
-    return ERR_OK;
-}
-
-int InsertVariable (char* object_buffer, BinaryTree_t* myTree)
-{
-    for (size_t i = 0; i < SIZE_OF_VARIABLES; i++)
-    {
-        if (!(*(myTree->Variables[i]).Name)) //ищем свободное место в массиве переменных
-        {
-            strncpy(myTree->Variables[i].Name, object_buffer, SIZE_OF_VAR);
-            return (int) i;
-        }
-    }
-    return -1;
-}
-
-void CleanCharBuffer(char* buffer, const size_t buffer_size)
-{
-    for (size_t i = 0; i < buffer_size; i++)
-    {
-        *(buffer + i) = 0;
-    }
-}
-
 EnumOfErrors EnterVariables(BinaryTree_t* myTree)
 {
-    fprintf(stdout, "\nНужно ввести переменные для расчета формулы!\n");
+    if (*(myTree->Variables[0].Name) == 0) return ERR_OK;
+    fprintf(stdout, YELLOW "\n\nYou should enter values of variables!\n\n" RESET);
     for (size_t i = 0; i < SIZE_OF_VARIABLES; i++)
     {
         if (*(myTree->Variables[i].Name) == 0) return ERR_OK;
-        fprintf(stdout, "Введите значение переменной \"%s\": ", myTree->Variables[i].Name);
+        fprintf(stdout, BLUE "Inter variable \"%s\": " RESET, myTree->Variables[i].Name);
         scanf("%lf", &myTree->Variables[i].Number); //TODO: check for stupid
     }
     return ERR_OK;
 }
 
-void clean_buffer (void)
+static void clean_buffer (void)
 {
     char buff[SIZE_OF_BUFFER] = {};
     fgets(buff, SIZE_OF_BUFFER, stdin);
+}
+
+EnumOfErrors TreeCalculating(BinaryTree_t* myTree)
+{
+    double result = RecEvaluate(myTree->Root, myTree);
+    printf(CYAN "\nResult: %lf\n" RESET, result);
+    return ERR_OK;
+}
+
+static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree)
+{
+    if (!CurrentNode) 
+    {
+        return NAN;
+    }
+    if (CurrentNode->Type == NUMBER)
+    {
+        return CurrentNode->Value.Number;
+    }
+    if (CurrentNode->Type == VARIABLE)
+    {
+        return myTree->Variables[CurrentNode->Value.Index].Number;
+    }
+
+    //TODO: optimization for unary operators
+
+    double LeftNumber  = RecEvaluate(CurrentNode->Left, myTree);
+    double RightNumber = RecEvaluate(CurrentNode->Right, myTree);
+
+    if (CurrentNode->Type == OPERATOR)
+    {
+        return Operators[CurrentNode->Value.Index].Operation(LeftNumber, RightNumber); //TODO: DSL
+    }
+
+    MYASSERT(0, ERR_UNKNOWN_TYPE, return NAN);
+}
+
+EnumOfErrors TreeOptimize(BinaryTree_t* myTree)
+{
+    myTree->ChangeOptimize=1;
+    while (myTree->ChangeOptimize)
+    {
+        myTree->ChangeOptimize = 0;
+        RecOptimizeConst  (myTree->Root, myTree);
+        RecOptimizeNeutral(myTree->Root, myTree);
+        PrintLogTree(myTree);
+    }
+    return ERR_OK;
+}
+
+//1. Свертка констант done 
+/* 
+    0*... ...*0 1*... ...*1
+    0+... ...+0
+    0-... ...-0
+    .../1
+    ...^0 0^... ...^1 1^...
+*/
+static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree)
+{
+    if (!CurrentNode) {return ERR_OK;}
+    if (CurrentNode->Type == OPERATOR)
+    {
+        switch (Operators[CurrentNode->Value.Index].Name[0])
+        {
+            //TODO: DSL
+            case '+': //+0 слева справа
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}            
+            break;
+            case '-': //-0 справа TODO: можно и для 0- менять на -1*
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree);  myTree->ChangeOptimize=1; return ERR_OK;}
+            break;
+            case '/':
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+            break;
+            case '^':
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
+            break;
+            case '*':
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+            break;
+
+            default: break;
+        }
+    }
+    RecOptimizeNeutral(CurrentNode->Left, myTree);
+    RecOptimizeNeutral(CurrentNode->Right, myTree);
+    return ERR_OK;
+}
+
+static EnumOfErrors DeleteNeutralNode(Node_t* NeutralNode, Node_t* BranchNode, BinaryTree_t* myTree)
+{
+    free(NeutralNode);
+    Node_t* PreviousNode = BranchNode->Parent;
+    //началась пересвязка
+    if (!(PreviousNode->Parent)) //корень!
+    {
+        myTree->Root       = BranchNode;
+        BranchNode->Parent = NULL;
+        free(PreviousNode);
+        return ERR_OK;
+    }
+    Node_t* NewPreviousNode = PreviousNode->Parent;
+    if (NewPreviousNode->Left == PreviousNode)  NewPreviousNode->Left = BranchNode;
+    else                                        NewPreviousNode->Right = BranchNode;
+    BranchNode->Parent = NewPreviousNode;
+    free(PreviousNode);
+    return ERR_OK;
+}
+
+static EnumOfErrors DeleteNeutralBranch(Node_t* CurrentNode, double NewValue)
+{
+    //Почистили все что было потом
+    RecFree(CurrentNode->Left);
+    RecFree(CurrentNode->Right);
+    //Замена типа узла на новое значение
+    CurrentNode->Left  = NULL;
+    CurrentNode->Right = NULL;
+    CurrentNode->Type = NUMBER;
+    CurrentNode->Value.Number = NewValue;
+    return ERR_OK;
+}
+
+//2. Удаление нейтральных элементов
+static bool RecOptimizeConst(Node_t* CurrentNode, BinaryTree_t* myTree)
+{
+    if (!CurrentNode)                   return 1;
+    if (CurrentNode->Type == NUMBER)    return 1;
+    if (CurrentNode->Type == VARIABLE)  return 0;
+
+    bool left  = RecOptimizeConst(CurrentNode->Left, myTree);
+    bool right = RecOptimizeConst(CurrentNode->Right, myTree);
+
+    if (left && right && (CurrentNode->Type == OPERATOR))
+    {
+        CurrentNode->Type         = NUMBER;
+        CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, CurrentNode->Right->Value.Number);
+        free(CurrentNode->Left);
+        free(CurrentNode->Right);
+        CurrentNode->Left  = NULL;
+        CurrentNode->Right = NULL;
+        myTree->ChangeOptimize=1;
+        return 1;   
+    }
+    else return 0;
+}
+
+static bool Compare (double x, double y)
+{
+    if (((isnan (x) == 1) && (isnan (y) == 1)) || (fabs (x - y) < EPSILONE))
+        return 1;
+    else
+        return 0;
+}
+
+static void RecFree (Node_t* CurrentNode)
+{
+    MYASSERT(CurrentNode, ERR_BAD_POINTER_NODE, return)
+
+    if (CurrentNode->Left)
+    {
+        RecFree (CurrentNode->Left);
+    }
+    if (CurrentNode->Right)
+    {
+        RecFree (CurrentNode->Right);
+    }
+    free(CurrentNode);
 }

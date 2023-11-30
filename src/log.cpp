@@ -13,6 +13,15 @@ static FILE*  FileLog   = NULL;
 static FILE*  FileGraph = NULL;
 static size_t NullNodes = 0;
 
+static FILE* GenerateImage (void);
+static void  GenerateGraph (BinaryTree_t* myTree);
+static void  WriteNode     (Node_t* CurrentNode, BinaryTree_t* myTree);
+static void  WriteNullNode (const char* Place, Node_t* CurrentNode);
+static void  WriteHead     (BinaryTree_t* myTree);
+static void  WriteTree     (BinaryTree_t* myTree);
+static FILE* OpenFile      (const char* file_open, const char* option);
+static void  CloseFile     (FILE* file_text);
+
 void _PrintLogStart (void)
 {
     struct stat sb = {};
@@ -85,7 +94,7 @@ void _PrintLogTree (BinaryTree_t* myTree, const char* file,  const char* functio
     (NumImage)++;
 }
 
-void GenerateGraph (BinaryTree_t* myTree)
+static void GenerateGraph (BinaryTree_t* myTree)
 {
     FileGraph = OpenFile(FILE_GRAPH, "w");
 
@@ -112,14 +121,14 @@ void GenerateGraph (BinaryTree_t* myTree)
     CloseFile (FileGraph);
 } 
 
-FILE* GenerateImage (void)
+static FILE* GenerateImage (void)
 {
     FILE* pPipe = popen ("dot " FILE_GRAPH  " -T " TYPE_OF_IMAGE, "r");
     MYASSERT(pPipe, ERR_BAD_OPEN_FILE, )
     return pPipe;
 }
 
-FILE* OpenFile (const char* file_open, const char* option)
+static FILE* OpenFile (const char* file_open, const char* option)
 {
     FILE *FileOpen = fopen (file_open, option);
 
@@ -128,14 +137,14 @@ FILE* OpenFile (const char* file_open, const char* option)
     return FileOpen;
 }
 
-void CloseFile (FILE* file_text)
+static void CloseFile (FILE* file_text)
 {
 	MYASSERT(file_text, BAD_POINTER_PASSED_IN_FUNC, assert(0));
     int result = fclose(file_text);
 	MYASSERT(!result, CLOSE_FILE, assert(0));
 }
 
-void WriteTree (BinaryTree_t* myTree)
+static void WriteTree (BinaryTree_t* myTree)
 {
     if (!(myTree->Root)) 
     {
@@ -149,7 +158,7 @@ void WriteTree (BinaryTree_t* myTree)
 
 }
 
-void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
+static void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
 {
     //TODO: cool macros maybe 
     if (CurrentNode->Type == INIT) 
@@ -196,7 +205,7 @@ void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
     }
 }
 
-void WriteNullNode (const char* Place, Node_t* CurrentNode)
+static void WriteNullNode (const char* Place, Node_t* CurrentNode)
 {
     fprintf (FileGraph, "\tnull%lu [shape = ellipse, style = filled, fillcolor = \"" FILL_BACK_GRAPH_NULL "\", color = \"" COLOR_FRAME "\", label = \"Неизвестно кто\"];\n"
                         "\tnode%p: %s -> null%lu", NullNodes, CurrentNode, Place, NullNodes);
@@ -204,7 +213,7 @@ void WriteNullNode (const char* Place, Node_t* CurrentNode)
     if (!strcmp(Place, "<f1>")) fprintf (FileGraph, "[color = \"" COLOR_EDGE_GRAPH "\", label = \"да\"];\n");
 }
 
-void WriteHead(BinaryTree_t* myTree)
+static void WriteHead(BinaryTree_t* myTree)
 {
     fprintf (FileGraph, "All[shape = Mrecord, label = \" HEADER | <f0> Root: %p \", style = \"filled\", fillcolor = \"" FILL_BACK_GRAPH "\"];\n", myTree->Root);
     if (myTree->Root)
