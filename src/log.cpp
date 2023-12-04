@@ -16,7 +16,7 @@ static size_t NullNodes = 0;
 static FILE* GenerateImage (void);
 static void  GenerateGraph (BinaryTree_t* myTree);
 static void  WriteNode     (Node_t* CurrentNode, BinaryTree_t* myTree);
-static void  WriteNullNode (const char* Place, Node_t* CurrentNode);
+//static void  WriteNullNode (const char* Place, Node_t* CurrentNode);
 static void  WriteHead     (BinaryTree_t* myTree);
 static void  WriteTree     (BinaryTree_t* myTree);
 static FILE* OpenFile      (const char* file_open, const char* option);
@@ -155,7 +155,6 @@ static void WriteTree (BinaryTree_t* myTree)
         WriteNode (myTree->Root, myTree);
         NullNodes = 0;
     }
-
 }
 
 static void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
@@ -173,6 +172,7 @@ static void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
     }
     if (CurrentNode->Type == OPERATOR) 
     {                               
+        //printf("%d",CurrentNode->Value.Index);
         fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_OPERATOR "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_OPERATOR_STR  " | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
                 CurrentNode, CurrentNode->Parent, CurrentNode, OPERATOR, Operators[CurrentNode->Value.Index].Name, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
     }
@@ -205,13 +205,13 @@ static void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
     }
 }
 
-static void WriteNullNode (const char* Place, Node_t* CurrentNode)
-{
-    fprintf (FileGraph, "\tnull%lu [shape = ellipse, style = filled, fillcolor = \"" FILL_BACK_GRAPH_NULL "\", color = \"" COLOR_FRAME "\", label = \"Неизвестно кто\"];\n"
-                        "\tnode%p: %s -> null%lu", NullNodes, CurrentNode, Place, NullNodes);
-    if (!strcmp(Place, "<f0>")) fprintf (FileGraph, "[color = \"" COLOR_EDGE_GRAPH "\", label = \"нет\"];\n");
-    if (!strcmp(Place, "<f1>")) fprintf (FileGraph, "[color = \"" COLOR_EDGE_GRAPH "\", label = \"да\"];\n");
-}
+// static void WriteNullNode (const char* Place, Node_t* CurrentNode)
+// {
+//     fprintf (FileGraph, "\tnull%lu [shape = ellipse, style = filled, fillcolor = \"" FILL_BACK_GRAPH_NULL "\", color = \"" COLOR_FRAME "\", label = \"Неизвестно кто\"];\n"
+//                         "\tnode%p: %s -> null%lu", NullNodes, CurrentNode, Place, NullNodes);
+//     if (!strcmp(Place, "<f0>")) fprintf (FileGraph, "[color = \"" COLOR_EDGE_GRAPH "\", label = \"нет\"];\n");
+//     if (!strcmp(Place, "<f1>")) fprintf (FileGraph, "[color = \"" COLOR_EDGE_GRAPH "\", label = \"да\"];\n");
+// }
 
 static void WriteHead(BinaryTree_t* myTree)
 {

@@ -226,6 +226,10 @@ static int InsertVariable (char* object_buffer, BinaryTree_t* myTree)
 {
     for (size_t i = 0; i < SIZE_OF_VARIABLES; i++)
     {
+        if (!strncmp(myTree->Variables[i].Name, object_buffer, SIZE_OF_VAR))
+        {
+            return (int) i;
+        }
         if (!(*(myTree->Variables[i]).Name)) //ищем свободное место в массиве переменных
         {
             strncpy(myTree->Variables[i].Name, object_buffer, SIZE_OF_VAR);

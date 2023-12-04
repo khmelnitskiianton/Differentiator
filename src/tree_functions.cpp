@@ -33,10 +33,9 @@ EnumOfErrors TreeDtor (BinaryTree_t* myTree)
         return ERR_OK;
     }
 
-    Verify(myTree);
+    //Verify(myTree);
 
     RecFree (myTree->Root); 
-
     return ERR_OK;
 }
 

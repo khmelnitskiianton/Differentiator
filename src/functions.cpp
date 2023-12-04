@@ -12,62 +12,18 @@
 #include "parsing.h"
 #include "functions.h"
 #include "log.h"
+#include "log_tex.h"
 #include "myassert.h"
 #include "verificator.h"
+#include "DSL.h"
 
-static void   clean_buffer (void);
-static void   PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree);
-static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree);
-static bool   Compare (double x, double y);
-static void   RecFree (Node_t* CurrentNode);
+static double       RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree);
+static bool         Compare (double x, double y);
+static void         RecFree (Node_t* CurrentNode);
 static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree);
 static bool         RecOptimizeConst(Node_t* CurrentNode, BinaryTree_t* myTree);
 static EnumOfErrors DeleteNeutralNode(Node_t* NeutralNode, Node_t* BranchNode, BinaryTree_t* myTree);
 static EnumOfErrors DeleteNeutralBranch(Node_t* CurrentNode, double NewValue);
-
-EnumOfErrors TreeInOrder (BinaryTree_t* myTree, FILE* filestream)
-{
-    if (!filestream)
-    {
-        fprintf(stderr, MAGENTA "Forgot to write file where to write tree!\nTry to start with [./tree.exe <name_of_file>]\n\n" RESET);
-        return ERR_BAD_FILESTREAM;
-    }
-    MYASSERT(myTree, ERR_BAD_POINTER_TREE, return ERR_BAD_POINTER_TREE)
-    Verify(myTree);
-    PrintInNode(myTree->Root, filestream, myTree);
-    fprintf(filestream, "\n");
-    return ERR_OK;
-}
-
-static void PrintInNode (Node_t* CurrentNode, FILE* filestream, BinaryTree_t* myTree)
-{
-    if (!CurrentNode) {fprintf(filestream, "_"); return;}
-    fprintf(filestream, "(");
-
-    PrintInNode(CurrentNode->Left, filestream, myTree);
-
-    //TODO: cool macros maybe
-    if (CurrentNode->Type == INIT)                             
-    {                                                              
-        fprintf(filestream, SPECIFIER_INIT, CurrentNode->Value.Number); 
-    }
-    if (CurrentNode->Type == NUMBER)                                
-    {                                                             
-        fprintf(filestream, SPECIFIER_NUMBER, CurrentNode->Value.Number); 
-    }
-    if (CurrentNode->Type == OPERATOR)                            
-    {                                                             
-        fprintf(filestream, SPECIFIER_OPERATOR_STR, Operators[CurrentNode->Value.Index].Name); 
-    }
-    if (CurrentNode->Type == VARIABLE)
-    {                                                             
-        fprintf(filestream, SPECIFIER_VARIABLE_STR, myTree->Variables[CurrentNode->Value.Index].Name); 
-    }
-
-    PrintInNode(CurrentNode->Right, filestream, myTree);
-
-    fprintf(filestream, ")");
-}
 
 EnumOfErrors EnterVariables(BinaryTree_t* myTree)
 {
@@ -82,16 +38,27 @@ EnumOfErrors EnterVariables(BinaryTree_t* myTree)
     return ERR_OK;
 }
 
-static void clean_buffer (void)
-{
-    char buff[SIZE_OF_BUFFER] = {};
-    fgets(buff, SIZE_OF_BUFFER, stdin);
-}
-
 EnumOfErrors TreeCalculating(BinaryTree_t* myTree)
 {
+    WriteTexText("После предварительных преобразований, слишком простых для разъяснения получаем: \\\\");
+    WriteTexFormula(myTree);
     double result = RecEvaluate(myTree->Root, myTree);
     printf(CYAN "\nResult: %lf\n" RESET, result);
+    WriteTexText("\nВ начале рассчитаем значение этой функции при заданных аргументах: \\\\\n");
+    size_t i = 0;
+    WriteTexText("\n\\begin{center}\n");
+    while (myTree->Variables[i].Name[0])
+    {
+        WriteTexText(myTree->Variables[i].Name);
+        WriteTexText(" = ");
+        WriteTexNumber(myTree->Variables[i].Number);
+        WriteTexText(",");
+        i++;
+    }
+    WriteTexText("\n\\end{center}");
+    WriteTexText("\nОчевидно, что оно будет равно: ");
+    WriteTexNumber(result);
+    WriteTexText(" \\\\\n");
     return ERR_OK;
 }
 
@@ -109,9 +76,7 @@ static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree)
     {
         return myTree->Variables[CurrentNode->Value.Index].Number;
     }
-
     //TODO: optimization for unary operators
-
     double LeftNumber  = RecEvaluate(CurrentNode->Left, myTree);
     double RightNumber = RecEvaluate(CurrentNode->Right, myTree);
 
@@ -121,7 +86,7 @@ static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree)
     }
 
     MYASSERT(0, ERR_UNKNOWN_TYPE, return NAN);
-}
+}   
 
 EnumOfErrors TreeOptimize(BinaryTree_t* myTree)
 {
@@ -144,6 +109,8 @@ EnumOfErrors TreeOptimize(BinaryTree_t* myTree)
     .../1
     ...^0 0^... ...^1 1^...
 */
+
+//TODO: If unary fnctions has right tree
 static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree)
 {
     if (!CurrentNode) {return ERR_OK;}
@@ -152,7 +119,7 @@ static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree
         switch (Operators[CurrentNode->Value.Index].Name[0])
         {
             //TODO: DSL
-            case '+': //+0 слева справа
+            case '+': 
                 if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
                 if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}            
             break;
@@ -163,10 +130,10 @@ static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree
                 if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
             break;
             case '^':
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
                 if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
                 if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
             break;
             case '*':
                 if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
@@ -229,7 +196,8 @@ static bool RecOptimizeConst(Node_t* CurrentNode, BinaryTree_t* myTree)
     if (left && right && (CurrentNode->Type == OPERATOR))
     {
         CurrentNode->Type         = NUMBER;
-        CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, CurrentNode->Right->Value.Number);
+        if (Operators[CurrentNode->Value.Index].TypeOperator) CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, CurrentNode->Right->Value.Number);
+        else CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, NAN);
         free(CurrentNode->Left);
         free(CurrentNode->Right);
         CurrentNode->Left  = NULL;
@@ -261,4 +229,114 @@ static void RecFree (Node_t* CurrentNode)
         RecFree (CurrentNode->Right);
     }
     free(CurrentNode);
+}
+
+//===========================================================================================================
+//===========================================================================================================
+//Взятие производной
+
+EnumOfErrors TreeDifferentiate(BinaryTree_t* myTree)
+{
+    fprintf(stdout, BLUE "\nStarting differentiate your function...\n" RESET);
+    WriteTexText("\nТеперь возьмем эту производную, которую в уме берут в начальной советской школе: \\\\");
+    Node_t* OldRoot = myTree->Root;
+    myTree->Root = RecDiff(myTree->Root, myTree);
+    RecFree(OldRoot);//очищаю старое
+    fprintf(stdout, CYAN "\nDone!\n");
+    WriteTexText("\nИтак если вы еще не уснули к этому моменту, то поздравляю, мы дошли до ответа: \\\\");
+    TreeOptimize(myTree);
+    WriteTexFormula(myTree);
+    return ERR_OK;
+}
+
+Node_t* RecDiff(Node_t* CurrentNode, BinaryTree_t* myTree)
+{
+    //WriteFormula(myTree);
+    if (CurrentNode->Type == NUMBER) //Производная константы 0
+    {
+        WriteCringeStart();
+        WriteTexText("\n\\begin{equation}\n");
+        WriteTexText("\\left(");
+        WriteTexNumber(CurrentNode->Value.Number);
+        WriteTexText("\\right)^{\\prime}");
+        WriteTexText("\n\\end{equation}");
+        WriteCringeEnd();
+        WriteTexText("\n\\begin{equation}\n");
+        WriteTexText("0");
+        WriteTexText("\n\\end{equation}");
+        return NUM(0);
+    }
+    if (CurrentNode->Type == VARIABLE) //если просто узел с x то 1
+    {
+        WriteCringeStart();
+        WriteTexText("\n\\begin{equation}\n");
+        WriteTexText("\\left(");
+        WriteTexText(myTree->Variables[CurrentNode->Value.Index].Name);
+        WriteTexText("\\right)^{\\prime}");
+        WriteTexText("\n\\end{equation}");
+        WriteCringeEnd();
+        WriteTexText("\n\\begin{equation}\n");
+        WriteTexText("1");
+        WriteTexText("\n\\end{equation}");
+        return NUM(1);
+    }
+    if (CurrentNode->Type == OPERATOR)
+    {
+        return Operators[CurrentNode->Value.Index].DiffOperation(myTree, CurrentNode);
+    }
+    MYASSERT(0, ERR_REC_DIFF, return NULL)
+}
+
+Node_t* DiffCreateNode (EnumOfType NewType, NodeValue_t NewValue, Node_t* LeftNode, Node_t* RightNode)
+{
+    Node_t* NewNode = (Node_t*) calloc (1, sizeof (NewNode[0]));
+    MYASSERT(NewNode, ERR_BAD_CALLOC, return NULL)
+    InitNode(NewNode);
+    NewNode->Left   = LeftNode;
+    NewNode->Right  = RightNode;
+    NewNode->Type   = NewType;
+
+    if (LeftNode) LeftNode->Parent = NewNode;
+    if (RightNode) RightNode->Parent = NewNode;
+
+    if (NewNode->Type == NUMBER) 
+    {
+        NewNode->Value.Number = NewValue.Number;
+    } 
+    if ((NewNode->Type == OPERATOR)||(NewNode->Type == VARIABLE))
+    {
+        NewNode->Value.Index  = NewValue.Index;
+    }
+    return NewNode;
+}
+
+Node_t* RecDiffCreateNode (EnumOfType NewType, NodeValue_t NewValue, Node_t* LeftNode, Node_t* RightNode)
+{
+    Node_t* NewNode = (Node_t*) calloc (1, sizeof (Node_t));
+    MYASSERT(NewNode, ERR_BAD_CALLOC, return NULL)
+    InitNode(NewNode);
+    if (LeftNode) 
+    {
+        NewNode->Left = RecDiffCreateNode(LeftNode->Type, LeftNode->Value, LeftNode->Left, LeftNode->Right);
+        NewNode->Left->Parent = NewNode;
+    }
+    else NewNode->Left = NULL;
+    if (RightNode) 
+    {
+        NewNode->Right = RecDiffCreateNode(RightNode->Type, RightNode->Value, RightNode->Left, RightNode->Right);
+        NewNode->Right->Parent = NewNode;
+    }
+    else NewNode->Right = NULL;
+
+    NewNode->Type = NewType;
+
+    if (NewNode->Type == NUMBER) 
+    {
+        NewNode->Value.Number = NewValue.Number;
+    } 
+    if ((NewNode->Type == OPERATOR)||(NewNode->Type == VARIABLE))
+    {
+        NewNode->Value.Index  = NewValue.Index;
+    }
+    return NewNode;
 }

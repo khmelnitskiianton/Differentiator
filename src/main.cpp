@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <time.h>
 
 #include "colors.h"
 #include "tree.h"
 #include "tree_functions.h"
 #include "log.h"
+#include "log_tex.h"
 #include "parsing.h"
 #include "functions.h"
 #include "myassert.h"
@@ -16,6 +18,7 @@ int main(int argc, char *argv[])
     {
         printf(GREEN "\n<<<FILE TO IN/OUT: %s>\n" RESET, argv[1]);
     }
+    srand((unsigned int)time(NULL));//задали srand
 
     BinaryTree_t myTree = {};
     TreeCtor (&myTree);
@@ -27,15 +30,18 @@ int main(int argc, char *argv[])
     UploadDataBase(&myTree, argv[1]);
     fprintf(stdout, GREEN "Downloading complete!\n\n" RESET);
     PrintLogTree (&myTree);
+    PrintLogTexStart();
+    WriteTexFormula(&myTree);
     //==================================================================
-    TreeInOrder(&myTree, stdout);
     TreeOptimize(&myTree);
-    PrintLogTree (&myTree);
     EnterVariables(&myTree);
     TreeCalculating(&myTree);
+    TreeDifferentiate(&myTree);
+    PrintLogTree (&myTree);
     //==================================================================
+    PrintLogTexFinish();
     PrintLogFinish();
-    TreeDtor (&myTree);
+    TreeDtor(&myTree);
     printf(GREEN "\n<<<GOOD ENDING>>>\n\n" RESET);
     return 0;
 }

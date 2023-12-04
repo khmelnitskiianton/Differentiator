@@ -14,6 +14,7 @@ typedef double Elem_t;
 #define SPECIFIER_VARIABLE_NUM " %.3lf "
 
 const Elem_t POISON_ELEMENT = NAN;
+const double EPSILONE = 1e-5; 
 
 enum EnumOfType {
     INIT     = 0,
@@ -28,7 +29,7 @@ const size_t SIZE_OF_VAR = 100;        //макс. размер одной пе�
 
 typedef union NodeValue {
     Elem_t Number;
-    int Index;
+    int    Index;
 } NodeValue_t;
 
 typedef struct Var {

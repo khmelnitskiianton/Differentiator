@@ -6,17 +6,16 @@
 const size_t SIZE_OF_BUFFER = 100;
 const int DONE = 1;
 const int ERROR = 0;
-const double EPSILONE = 10e-4;
 
 //TODO: DSL
 
-//база
-//Node_t* RecSearch (const Elem_t* Value, Node_t* CurrentNode);
-//---------------------------------------------
+EnumOfErrors TreeCalculating   (BinaryTree_t* myTree);
+EnumOfErrors EnterVariables    (BinaryTree_t* myTree);
+EnumOfErrors TreeOptimize      (BinaryTree_t* myTree);
+EnumOfErrors TreeDifferentiate (BinaryTree_t* myTree);
 
-EnumOfErrors TreeInOrder     (BinaryTree_t* myTree, FILE* filestream);
-EnumOfErrors TreeCalculating (BinaryTree_t* myTree);
-EnumOfErrors EnterVariables  (BinaryTree_t* myTree);
-EnumOfErrors TreeOptimize    (BinaryTree_t* myTree);
+Node_t*      DiffCreateNode (EnumOfType NewType, NodeValue_t NewValue, Node_t* LeftNode, Node_t* RightNode);
+Node_t*      RecDiffCreateNode (EnumOfType NewType, NodeValue_t NewValue, Node_t* LeftNode, Node_t* RightNode);
+Node_t*      RecDiff(Node_t* CurrentNode, BinaryTree_t* myTree);
 
 #endif

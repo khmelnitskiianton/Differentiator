@@ -38,13 +38,21 @@ Logs using Graphviz to vizualize binary tree!(you can turn them off)
 $ sudo apt install graphviz
 ```
 
+Tex logs using TeXLive to make a math book of cringe differentiating!(you can turn them off) 
+
+```c
+$ sudo apt install texlive
+```
+
+It uses command `pdflatex ...`
+
 ## Using
 
 My program took only formuls with right grammatic.
 
 Pattern is(in example_formula.txt):
 
-`( ( (_aboba_) / ((_1_)sin_)) * (_suka_) )`
+`( ( ((_ x _)+ (_1_))ln _) ^(_x_) )`
 
 The main rules in writing formuls are:
 1. Every types of spaces is ignoring
@@ -54,12 +62,14 @@ The main rules in writing formuls are:
 Types in formula:
 
 1. Double number
-2. Operators(Binary, unary): `+-*/^`, `sin cos tg ctg sqrt`
+2. Operators(Binary, unary): `+-*/^`, `sin cos tg ctg ln`
 3. Variables
 
 ## Options of compiling
 
 DEBUG_LOG 
+
+DEBUG_TEX_LOG
 
 DEBUG_MYASSERT 
 
