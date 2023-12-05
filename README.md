@@ -28,7 +28,7 @@ cmake .
 make
 ./differentiator.exe <file_to_read_formula>.txt
 ```
-5. Write formula, write variables and check logs!!!
+5. Write formula, write variables and check `tex/matan_book.pdf`!!!
 
 ## Extra programs
 

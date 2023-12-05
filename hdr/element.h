@@ -26,6 +26,7 @@ enum EnumOfType {
 
 const size_t SIZE_OF_VARIABLES = 30;   //макс. кол-во переменных
 const size_t SIZE_OF_VAR = 100;        //макс. размер одной переменной, можно сделать динамикой
+const size_t SIZE_OF_CHANGES = 25;   //макс. кол-во переменных
 
 typedef union NodeValue {
     Elem_t Number;

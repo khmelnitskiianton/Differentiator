@@ -40,25 +40,10 @@ EnumOfErrors EnterVariables(BinaryTree_t* myTree)
 
 EnumOfErrors TreeCalculating(BinaryTree_t* myTree)
 {
-    WriteTexText("После предварительных преобразований, слишком простых для разъяснения получаем: \\\\");
-    WriteTexFormula(myTree);
     double result = RecEvaluate(myTree->Root, myTree);
     printf(CYAN "\nResult: %lf\n" RESET, result);
-    WriteTexText("\nВ начале рассчитаем значение этой функции при заданных аргументах: \\\\\n");
-    size_t i = 0;
-    WriteTexText("\n\\begin{center}\n");
-    while (myTree->Variables[i].Name[0])
-    {
-        WriteTexText(myTree->Variables[i].Name);
-        WriteTexText(" = ");
-        WriteTexNumber(myTree->Variables[i].Number);
-        WriteTexText(",");
-        i++;
-    }
-    WriteTexText("\n\\end{center}");
-    WriteTexText("\nОчевидно, что оно будет равно: ");
-    WriteTexNumber(result);
-    WriteTexText(" \\\\\n");
+    
+    WriteTexCalculating(result, myTree);
     return ERR_OK;
 }
 
@@ -238,14 +223,12 @@ static void RecFree (Node_t* CurrentNode)
 EnumOfErrors TreeDifferentiate(BinaryTree_t* myTree)
 {
     fprintf(stdout, BLUE "\nStarting differentiate your function...\n" RESET);
-    WriteTexText("\nТеперь возьмем эту производную, которую в уме берут в начальной советской школе: \\\\");
     Node_t* OldRoot = myTree->Root;
     myTree->Root = RecDiff(myTree->Root, myTree);
     RecFree(OldRoot);//очищаю старое
-    fprintf(stdout, CYAN "\nDone!\n");
-    WriteTexText("\nИтак если вы еще не уснули к этому моменту, то поздравляю, мы дошли до ответа: \\\\");
+    fprintf(stdout, CYAN "\nDone!\n" RESET);
     TreeOptimize(myTree);
-    WriteTexFormula(myTree);
+    GetTexSizeTree(myTree);
     return ERR_OK;
 }
 
@@ -254,30 +237,12 @@ Node_t* RecDiff(Node_t* CurrentNode, BinaryTree_t* myTree)
     //WriteFormula(myTree);
     if (CurrentNode->Type == NUMBER) //Производная константы 0
     {
-        WriteCringeStart();
-        WriteTexText("\n\\begin{equation}\n");
-        WriteTexText("\\left(");
-        WriteTexNumber(CurrentNode->Value.Number);
-        WriteTexText("\\right)^{\\prime}");
-        WriteTexText("\n\\end{equation}");
-        WriteCringeEnd();
-        WriteTexText("\n\\begin{equation}\n");
-        WriteTexText("0");
-        WriteTexText("\n\\end{equation}");
+        TEX_DIF_NUM(CurrentNode, myTree)
         return NUM(0);
     }
     if (CurrentNode->Type == VARIABLE) //если просто узел с x то 1
     {
-        WriteCringeStart();
-        WriteTexText("\n\\begin{equation}\n");
-        WriteTexText("\\left(");
-        WriteTexText(myTree->Variables[CurrentNode->Value.Index].Name);
-        WriteTexText("\\right)^{\\prime}");
-        WriteTexText("\n\\end{equation}");
-        WriteCringeEnd();
-        WriteTexText("\n\\begin{equation}\n");
-        WriteTexText("1");
-        WriteTexText("\n\\end{equation}");
+        TEX_DIF_VAR(CurrentNode, myTree)
         return NUM(1);
     }
     if (CurrentNode->Type == OPERATOR)

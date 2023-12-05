@@ -162,24 +162,24 @@ static void WriteNode (Node_t* CurrentNode, BinaryTree_t* myTree)
     //TODO: cool macros maybe 
     if (CurrentNode->Type == INIT) 
     {                               
-        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_INIT "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_INIT  " | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
-                CurrentNode, CurrentNode->Parent, CurrentNode, INIT, CurrentNode->Value.Number, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
+        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_INIT "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_INIT  " | SIZE: %lf | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
+                CurrentNode, CurrentNode->Parent, CurrentNode, INIT, CurrentNode->Value.Number,CurrentNode->TexSize, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
     }
     if (CurrentNode->Type == NUMBER) 
     {                               
-        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_NUMBER "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_NUMBER  " | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
-                CurrentNode, CurrentNode->Parent, CurrentNode, NUMBER, CurrentNode->Value.Number, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
+        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_NUMBER "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_NUMBER  " | SIZE: %lf | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
+                CurrentNode, CurrentNode->Parent, CurrentNode, NUMBER, CurrentNode->Value.Number,CurrentNode->TexSize, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
     }
     if (CurrentNode->Type == OPERATOR) 
     {                               
         //printf("%d",CurrentNode->Value.Index);
-        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_OPERATOR "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_OPERATOR_STR  " | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
-                CurrentNode, CurrentNode->Parent, CurrentNode, OPERATOR, Operators[CurrentNode->Value.Index].Name, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
+        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_OPERATOR "\", color = \"" COLOR_FRAME "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_OPERATOR_STR  " | SIZE: %lf | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
+                CurrentNode, CurrentNode->Parent, CurrentNode, OPERATOR, Operators[CurrentNode->Value.Index].Name, CurrentNode->TexSize, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
     }
     if (CurrentNode->Type == VARIABLE) 
     {                               
-        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_VARIABLE "\", color = \"" COLOR_EDGE_GRAPH "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_VARIABLE_STR " | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
-                CurrentNode, CurrentNode->Parent, CurrentNode, VARIABLE, myTree->Variables[CurrentNode->Value.Index].Name, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
+        fprintf (FileGraph, "\tnode%p [shape = Mrecord, style = filled, fillcolor = \"" COLOR_VARIABLE "\", color = \"" COLOR_EDGE_GRAPH "\", label = \"{ PARENT: %p | PTR: %p | TYPE: %d | DATA: " SPECIFIER_VARIABLE_STR " | SIZE: %lf | { <f0> LEFT: %p | <f1> RIGHT: %p }}\"];\n", 
+                CurrentNode, CurrentNode->Parent, CurrentNode, VARIABLE, myTree->Variables[CurrentNode->Value.Index].Name, CurrentNode->TexSize, CurrentNode->Left, CurrentNode->Right);                                                                                                                                              
     }
 
     if (CurrentNode->Left)

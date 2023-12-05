@@ -36,8 +36,11 @@ int main(int argc, char *argv[])
     TreeOptimize(&myTree);
     EnterVariables(&myTree);
     TreeCalculating(&myTree);
+    WriteTexText("\nТеперь возьмем эту производную, которую в уме берут в начальной советской школе: \\\\");
     TreeDifferentiate(&myTree);
+    WriteTexDifferentiate(&myTree);
     PrintLogTree (&myTree);
+    WriteChanges(&myTree);
     //==================================================================
     PrintLogTexFinish();
     PrintLogFinish();

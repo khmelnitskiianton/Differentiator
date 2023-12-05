@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 
+#include "colors.h"
 #include "tree.h"
 #include "log_tex.h"
 #include "myassert.h"
@@ -11,11 +12,17 @@
 
 
 static FILE*  FileLogTex = NULL;
-
+const size_t SIZE_OF_BUFFER = 100;
 static FILE* OpenFile (const char* file_open, const char* option);
 static void  CloseFile (FILE* file_text);
 static void  GeneratePdf (void);
 static bool  Compare (double x, double y);
+static size_t GetSizeOfNum(double Number);
+static double WidthOfNode(Node_t* CurrentNode, BinaryTree_t* myTree);
+static double Maxi(double x, double y);
+static char InsertChange(Node_t* CurrentNode, BinaryTree_t* myTree);
+static bool CheckForChangeLeft(Node_t* CurrentNode);
+static bool CheckForChangeRight(Node_t* CurrentNode);
 
 void _PrintLogTexStart (void)
 {
@@ -158,7 +165,6 @@ void _WriteTexNode (Node_t* CurrentNode, BinaryTree_t* myTree)
 {
     if (!CurrentNode) {return;}
 
-    //TODO: cool macros maybe
     if (CurrentNode->Type == NUMBER)                                
     {
         _WriteTexNumber(CurrentNode->Value.Number);
@@ -167,6 +173,9 @@ void _WriteTexNode (Node_t* CurrentNode, BinaryTree_t* myTree)
     {
         fprintf(FileLogTex, SPECIFIER_VARIABLE_STR, myTree->Variables[CurrentNode->Value.Index].Name); 
     }
+
+    bool left_change = CheckForChangeLeft(CurrentNode); 
+    bool right_change = CheckForChangeRight(CurrentNode);
     if (CurrentNode->Type == OPERATOR)
     {
         bool bracket_left = 1;
@@ -183,36 +192,76 @@ void _WriteTexNode (Node_t* CurrentNode, BinaryTree_t* myTree)
         {
             case ADD: //+
                 IF_BRACKET(bracket_left, "left(")
-                WriteTexNode(CurrentNode->Left, myTree);
+                if (left_change) 
+                {
+                    char NameChange = InsertChange(CurrentNode->Left, myTree);
+                    fprintf(FileLogTex, " %c ", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Left, myTree);
                 IF_BRACKET(bracket_left, "right)")
                 fprintf(FileLogTex, "+");
                 IF_BRACKET(bracket_right, "left(")
-                WriteTexNode(CurrentNode->Right, myTree);
+                if (right_change)
+                {
+                    char NameChange = InsertChange(CurrentNode->Right, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Right, myTree);
                 IF_BRACKET(bracket_right, "right)")
             break;
             case SUB: //-
                 IF_BRACKET(bracket_left, "left(")
-                WriteTexNode(CurrentNode->Left, myTree);
+                if (left_change) 
+                {
+                    char NameChange = InsertChange(CurrentNode->Left, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Left, myTree);
                 IF_BRACKET(bracket_left, "right)")
                 fprintf(FileLogTex, "-");
                 IF_BRACKET(bracket_right, "left(")
-                WriteTexNode(CurrentNode->Right, myTree);
+                if (right_change)
+                {
+                    char NameChange = InsertChange(CurrentNode->Right, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Right, myTree);
                 IF_BRACKET(bracket_right, "right)")
             break;
             case MUL: //*
                 IF_BRACKET(bracket_left, "left(")
-                WriteTexNode(CurrentNode->Left, myTree);
+                if (left_change) 
+                {
+                    char NameChange = InsertChange(CurrentNode->Left, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Left, myTree);
                 IF_BRACKET(bracket_left, "right)")
                 fprintf(FileLogTex, "\\cdot ");
                 IF_BRACKET(bracket_right, "left(")
-                WriteTexNode(CurrentNode->Right, myTree);
+                if (right_change)
+                {
+                    char NameChange = InsertChange(CurrentNode->Right, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Right, myTree);
                 IF_BRACKET(bracket_right, "right)")
             break;
             case DIV: ///
                 fprintf(FileLogTex, "\\frac{");
-                WriteTexNode(CurrentNode->Left, myTree);
+                if (left_change) 
+                {
+                    char NameChange = InsertChange(CurrentNode->Left, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Left, myTree);
                 fprintf(FileLogTex, "}{");
-                WriteTexNode(CurrentNode->Right, myTree);
+                if (right_change)
+                {
+                    char NameChange = InsertChange(CurrentNode->Right, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Right, myTree);
                 fprintf(FileLogTex, "}");
             break;
             case POW: //^
@@ -221,17 +270,32 @@ void _WriteTexNode (Node_t* CurrentNode, BinaryTree_t* myTree)
                     if (Compare(CurrentNode->Left->Value.Number, 0.5))
                     {
                         fprintf(FileLogTex, "\\sqrt{");
-                        WriteTexNode(CurrentNode->Left, myTree);
+                        if (left_change) 
+                        {
+                            char NameChange = InsertChange(CurrentNode->Left, myTree);
+                            fprintf(FileLogTex, "%c", NameChange);
+                        }
+                        else WriteTexNode(CurrentNode->Left, myTree);
                         fprintf(FileLogTex, "}");     
                         return;   
                     }
                 }
                 IF_BRACKET(bracket_left, "left(")
-                WriteTexNode(CurrentNode->Left, myTree);
+                if (left_change) 
+                {
+                    char NameChange = InsertChange(CurrentNode->Left, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Left, myTree);
                 IF_BRACKET(bracket_left, "right)")
                 fprintf(FileLogTex, "^");
                 fprintf(FileLogTex, "{");
-                WriteTexNode(CurrentNode->Right, myTree);
+                if (right_change)
+                {
+                    char NameChange = InsertChange(CurrentNode->Right, myTree);
+                    fprintf(FileLogTex, "%c", NameChange);
+                }
+                else WriteTexNode(CurrentNode->Right, myTree);
                 fprintf(FileLogTex, "}");
             break;
             case SIN: //sin
@@ -278,6 +342,12 @@ void _WriteTexText(const char* str)
     fprintf(FileLogTex, "%s", str);
 } 
 
+static double Maxi(double x, double y)
+{
+    if ((x > y) || Compare(x,y)) return x;
+    else return y;
+}
+
 void _WriteTexNumber(double Number)
 {
     if (Number < 0) 
@@ -308,4 +378,159 @@ void _WriteCringeEnd(void)
 {
     size_t RandomIndex = (size_t) rand() % (SIZE_OF_CRINGE_END); //rand = [0, SIZE_OF_CRINGE)
     fprintf(FileLogTex, "\n%s \\\\ \n", CringeEnd[RandomIndex]);
+}
+
+void _WriteTexCalculating(double result, BinaryTree_t* myTree)
+{
+    WriteTexText("После предварительных преобразований, слишком простых для разъяснения получаем: \\\\");
+    WriteTexFormula(myTree);
+    WriteTexText("\nВ начале рассчитаем значение этой функции при заданных аргументах: \\\\\n");
+    size_t i = 0;
+    WriteTexText("\n\\begin{center}\n");
+    while (myTree->Variables[i].Name[0])
+    {
+        WriteTexText(myTree->Variables[i].Name);
+        WriteTexText(" = ");
+        WriteTexNumber(myTree->Variables[i].Number);
+        WriteTexText(",");
+        i++;
+    }
+    WriteTexText("\n\\end{center}");
+    WriteTexText("\nОчевидно, что оно будет равно: ");
+    WriteTexNumber(result);
+    WriteTexText(" \\\\\n");
+}
+
+void _WriteTexDifferentiate(BinaryTree_t* myTree)
+{
+    WriteTexText("\nИтак если вы еще не уснули к этому моменту, то поздравляю, мы дошли до ответа: \\\\");
+    WriteTexFormula(myTree);
+    WriteTexText("\n");
+}
+
+void _GetTexSizeTree(BinaryTree_t* myTree)
+{
+    WidthOfNode(myTree->Root, myTree);
+}
+
+static double WidthOfNode(Node_t* CurrentNode, BinaryTree_t* myTree)
+{
+    if (CurrentNode->Type == VARIABLE) 
+    {
+        CurrentNode->TexSize = (double) strlen(myTree->Variables[CurrentNode->Value.Index].Name);
+        return CurrentNode->TexSize;
+    }
+    if (CurrentNode->Type == NUMBER) 
+    {
+        CurrentNode->TexSize = (double) GetSizeOfNum(CurrentNode->Value.Number);
+        return CurrentNode->TexSize;
+    }
+
+    if (CurrentNode->Type == OPERATOR)
+    {
+        switch (CurrentNode->Value.Index)
+        {
+            case ADD: //+
+            case SUB:
+                CurrentNode->TexSize = WidthOfNode(CurrentNode->Left, myTree) + WidthOfNode(CurrentNode->Right, myTree) + 3;
+                return CurrentNode->TexSize;
+            break;
+            case MUL:
+                CurrentNode->TexSize = WidthOfNode(CurrentNode->Left, myTree) + WidthOfNode(CurrentNode->Right, myTree) + 5;
+                return CurrentNode->TexSize;
+            break;
+            case DIV:
+                CurrentNode->TexSize = Maxi(WidthOfNode(CurrentNode->Left, myTree), WidthOfNode(CurrentNode->Right, myTree));
+                return CurrentNode->TexSize;
+            break;
+            case POW:
+                CurrentNode->TexSize = WidthOfNode(CurrentNode->Left, myTree) + 3 + 0.5 * WidthOfNode(CurrentNode->Right, myTree);
+                return CurrentNode->TexSize;
+            break;
+            case SIN:
+            case COS:
+            case CTG:
+                CurrentNode->TexSize = WidthOfNode(CurrentNode->Left, myTree) + 5;
+                return CurrentNode->TexSize;
+            break;
+            case TG:
+            case LN:
+                CurrentNode->TexSize = WidthOfNode(CurrentNode->Left, myTree) + 4;
+                return CurrentNode->TexSize;
+            break;
+            default: break;
+        }
+    }
+    return NAN;
+}
+
+static size_t GetSizeOfNum(double Number)
+{
+    char num_buffer[SIZE_OF_BUFFER] = {};
+    if (Number < 0) 
+    {
+        if(fabs(Number - round(Number)) < EPSILONE)
+        {
+            snprintf(num_buffer, SIZE_OF_BUFFER,"(%d)", int(Number));    
+        }
+        else snprintf(num_buffer, SIZE_OF_BUFFER,"(" SPECIFIER_NUMBER ")", Number); 
+    }
+    else 
+    {
+        if(fabs(Number - round(Number)) < EPSILONE)
+        {
+            snprintf(num_buffer, SIZE_OF_BUFFER,"%d", int(Number));    
+        }
+        else snprintf(num_buffer, SIZE_OF_BUFFER, SPECIFIER_NUMBER, Number); 
+    }    
+    return strlen(num_buffer);
+}
+
+static bool CheckForChangeLeft(Node_t* CurrentNode)
+{
+    if ((CurrentNode->TexSize > SIZE_LIMIT) && (CurrentNode->Left->TexSize < SIZE_LIMIT))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+static bool CheckForChangeRight(Node_t* CurrentNode)
+{
+    if (!CurrentNode->Right) return 0;
+    if ((CurrentNode->TexSize > SIZE_LIMIT) && (CurrentNode->Right->TexSize < SIZE_LIMIT))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+static char InsertChange(Node_t* CurrentNode, BinaryTree_t* myTree)
+{
+    for (size_t i = 0; i < SIZE_OF_CHANGES; i++)
+    {
+        if (myTree->Changes[i].Name == 0)
+        {
+            myTree->Changes[i].Name       = 'A' + (char) i;
+            myTree->Changes[i].ChangeNode = CurrentNode;
+            return myTree->Changes[i].Name;
+        }
+    }
+    return '\0';
+    printf(RED "\nOVERFLOW ARRAY OF CHANGES\n" RESET);
+}
+
+void _WriteChanges(BinaryTree_t* myTree)
+{
+    if (myTree->Changes[0].Name == 0) return;
+
+    fprintf(FileLogTex, "\nВ данной задаче для удобства мы ввели следующие замены: \\\\\n");
+
+    for (size_t i = 0; i < SIZE_OF_CHANGES; i++)
+    {
+        if (myTree->Changes[i].Name == 0) return;
+        fprintf(FileLogTex, "\n\\[ %c = ", myTree->Changes[i].Name);
+        _WriteTexNode(myTree->Changes[i].ChangeNode, myTree);
+        fprintf(FileLogTex, "\\] \n");
+    }
 }
