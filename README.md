@@ -89,6 +89,12 @@ Checking tree for loops and other errors. Functions returns EnumOfErrors
 
 ## Logs
 
+`log_tex.cpp` `log_tex.h`
+
+My program generates logs in pdf with tex! So, you can see in `tex/` file `matan_book.pdf` - it is funny generated math book!
+
+It write every steps in differentiating with cringe phrases, in the and it adds changings(security from overflowing formula in one line)!
+
 `log.cpp` `log.h`
 
 Logs use GraphViz to vizualized graphs in pictures
