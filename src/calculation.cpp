@@ -69,7 +69,11 @@ double _pow(const double a, const double b)
 
 Node_t* _dif_pow(BinaryTree_t* myTree, Node_t* CurrentNode)
 {
-    if (R->Type == NUMBER) 
+    if ((L->Type == NUMBER)&&(R->Type == NUMBER))
+    {
+        return NUM(pow(L->Value.Number, R->Value.Number));
+    }
+    else if (R->Type == NUMBER) 
     {
         TEX_DIF_POW_VAR_NUM(CurrentNode, myTree)
         return OPR(MUL, NUM(R->Value.Number), OPR(MUL, OPR(POW, CPY(L), DiffCreateNode(R->Type, {.Number = R->Value.Number - 1}, (R->Left), (R->Right))), DIF(L)));
@@ -178,3 +182,8 @@ static void RecFree (Node_t* CurrentNode)
     }
     free(CurrentNode);
 }
+
+// static bool RecCheckAllNum(Node_t* CurrentNode)
+// {
+
+// }

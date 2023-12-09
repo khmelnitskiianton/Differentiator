@@ -69,317 +69,67 @@ void  _WriteChanges(BinaryTree_t* myTree);
 #define FILE_LOG_OUT "tex/matan_book.pdf"
 
 const double SIZE_LIMIT = 70;
- 
-constexpr const char* CringeStart[] = 
-{
-    "Очевидно, что ",
-	"Это элементарнийшее выражение ",  
-	"Каждый советский эмбрион знает, что",
-	"Вы проходили в школе, что ",
-	"Надеюсь вы уже уснули, поэтому бла-бла-бла ",
-	"Аналогично выходит, что ",
-	"Получаем, что",
-	"Для любого $\\varepsilon$ > 0",
-	"Отметим, что ",
-	"Легко представить, что",
-	"Каждому кто закончил церковно-приходскую школу известно, что",
-	"Вольфрам(спасибо что не молибден) говорит, что",
-	"Я устал придумывать пасты поэтому ",
-	"После округления ",
-	"Аппроксимируя получаем, что ",
-	"Косвенно получаем, что ",
-	"А Петрович знает, что ",
-	"Надо записать пока не забыл, надо забыть пока не записал, что",
-	"Используя $9\\frac{3}{4}$ том Ландау-Лифшица получаем, что ",
-};
-constexpr const char* CringeEnd[] =
-{
-	"таким образом становится ",
-	"simple переходит в ",
-	"что-то странное, пусть становится ",
-	"- табличная функция, которая равна ",
-	"если записать короче, получаем",
-	"лёгким движением руки превращается в элегантное ",
-	"трудновато держать в уме, поэтому равно",
-	"по 256 аксиоме Дединского будет",
-	"может быть станет(хотя хз)",
-	"непротиворечит следующему переходу к ",
-	"далее следует мысленный переход к ",
-	"по 1024 методу Султанова преобразуется в ",
-	"тривиально решается так",
-	"после округления вниз преобразуется к",
-	"после округления вверх обращается в",
-	"примем на веру, что это становится ",
-	"в комплесном решении будет",
-	"объяснение следующего перехода остается вам в качестве д/з ",
-	"при решении тривиальным способом станет ",
-	"по 64 теореме Савватеева равно ",
-	"остсюда прямо следует ",
-	"Python бы преобразовал это в ",
-	"легко сводится с помощью Excel к ",
-	"в других обозначениях",
-	"после замены базиса получается",
-	"трах тибидох ",
-};
 
-const int SIZE_OF_CRINGE_START = sizeof(CringeStart)/sizeof(CringeStart[0]); //размер массива оператора
-const int SIZE_OF_CRINGE_END   = sizeof(CringeEnd)/sizeof(CringeEnd[0]); //размер массива оператора
+//функции для вывода теха
+void tex_dif_num			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_var			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_add			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_sub			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_mul			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_div			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_pow_num_var	(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_pow_var_num	(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_pow_xx			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_sin			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_cos			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_tg				(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_ctg			(Node_t* CurrentNode, BinaryTree_t* myTree);
+void tex_dif_ln				(Node_t* CurrentNode, BinaryTree_t* myTree);
 
-#define TEX_DIF_NUM(CurrentNode, myTree) \
-		WriteCringeStart();															\
-        WriteTexText("\n\\begin{equation}\n");								\
-        WriteTexText("\\left(");								\
-        WriteTexNumber(CurrentNode->Value.Number);								\
-        WriteTexText("\\right)^{\\prime}");								\
-        WriteTexText("\n\\end{equation}");								\
-        WriteCringeEnd();								\
-        WriteTexText("\n\\begin{equation}\n");								\
-        WriteTexText("0");								\
-        WriteTexText("\n\\end{equation}");		
-
-#define TEX_DIF_VAR(CurrentNode, myTree) \
-		WriteCringeStart();									\
-        WriteTexText("\n\\begin{equation}\n");									\
-        WriteTexText("\\left(");									\
-        WriteTexText(myTree->Variables[CurrentNode->Value.Index].Name);									\
-        WriteTexText("\\right)^{\\prime}");									\
-        WriteTexText("\n\\end{equation}");									\
-        WriteCringeEnd();									\
-        WriteTexText("\n\\begin{equation}\n");									\
-        WriteTexText("1");									\
-        WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_ADD(CurrentNode, myTree) \
-		WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexNode(CurrentNode->Left, myTree);							\
-    	WriteTexText("+");							\
-    	WriteTexNode(CurrentNode->Right, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexNode(CurrentNode->Left, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("+\\left(");							\
-    	WriteTexNode(CurrentNode->Right, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");		
-
-#define TEX_DIF_SUB(CurrentNode, myTree) \
-	    WriteCringeStart();								\
-    	WriteTexText("\n\\begin{equation}\n");								\
-    	WriteTexText("\\left(");								\
-    	WriteTexNode(L, myTree);								\
-    	WriteTexText("-");								\
-    	WriteTexNode(R, myTree);								\
-    	WriteTexText("\\right)^{\\prime}");								\
-    	WriteTexText("\n\\end{equation}");								\
-    	WriteCringeEnd();								\
-    	WriteTexText("\n\\begin{equation}\n");								\
-    	WriteTexText("\\left(");								\
-    	WriteTexNode(L, myTree);								\
-    	WriteTexText("\\right)^{\\prime}");								\
-    	WriteTexText("-\\left(");								\
-    	WriteTexNode(R, myTree);								\
-    	WriteTexText("\\right)^{\\prime}");								\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_MUL(CurrentNode, myTree) \
-    	WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)");							\
-    	WriteTexText("\\cdot");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("\\right)");							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}\\cdot ");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("+\\left(");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("\\right)^{\\prime}\\cdot ");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_DIV(CurrentNode, myTree) \
-    	WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(\\frac{");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("}{");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("}\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\frac{\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("-\\left(");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("\\right)^{\\prime}}{");							\
-    	WriteTexNode(R, myTree);							\
-    	WriteTexText("^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_POW_VAR_NUM(CurrentNode, myTree) \
-		WriteCringeStart();							\
-        WriteTexText("\n\\begin{equation}\n");							\
-        WriteTexText("\\left(\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)^{");							\
-        WriteTexNumber(R->Value.Number);							\
-        WriteTexText("}\\right)^{\\prime}");							\
-        WriteTexText("\n\\end{equation}");							\
-        WriteCringeEnd();							\
-        WriteTexText("\n\\begin{equation}\n");							\
-        WriteTexNumber(R->Value.Number);							\
-        WriteTexText("\\cdot\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)^{");							\
-        WriteTexNumber(R->Value.Number-1);							\
-        WriteTexText("}\\cdot\\left(");							\
-        WriteTexNode(L, myTree);								\
-        WriteTexText("\\right)^{\\prime}");							\
-        WriteTexText("\n\\end{equation}");							
-
-#define TEX_DIF_POW_NUM_VAR(CurrentNode, myTree) \
-		WriteCringeStart();								\
-        WriteTexText("\n\\begin{equation}\n");								\
-        WriteTexText("\\left(\\left(");								\
-        WriteTexNumber(L->Value.Number);								\
-        WriteTexText("\\right)^{");								\
-        WriteTexNode(R, myTree);								\
-        WriteTexText("}\\right)^{\\prime}");								\
-        WriteTexText("\n\\end{equation}");								\
-        WriteCringeEnd();								\
-        WriteTexText("\n\\begin{equation}\n");								\
-        WriteTexNumber(L->Value.Number);								\
-        WriteTexText("^{");								\
-        WriteTexNode(R, myTree);								\
-        WriteTexText("}\\cdot\\left(");								\
-        WriteTexNode(R, myTree);								\
-        WriteTexText("\\right)^{\\prime}\\cdot ln\\left(");								\
-        WriteTexNumber(L->Value.Number);								\
-        WriteTexText("\\right)");								\
-        WriteTexText("\n\\end{equation}");								
-
-#define TEX_DIF_POW_XX(CurrentNode, myTree) \
-		WriteCringeStart();							\
-        WriteTexText("\n\\begin{equation}\n");							\
-        WriteTexText("\\left(\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)^{");							\
-        WriteTexNode(R, myTree);							\
-        WriteTexText("}\\right)^{\\prime}");							\
-        WriteTexText("\n\\end{equation}");							\
-        WriteCringeEnd();							\
-        WriteTexText("\n\\begin{equation}\n");							\
-        WriteTexText("\\left(e^{");							\
-        WriteTexNode(R, myTree);							\
-        WriteTexText("\\cdot ln\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)}\\right)^{\\prime} = ");							\
-        WriteTexText("e^{");							\
-        WriteTexNode(R, myTree);							\
-        WriteTexText("\\cdot ln\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)} \\cdot \\left(");							\
-        WriteTexNode(R, myTree);							\
-        WriteTexText("\\cdot ln\\left(");							\
-        WriteTexNode(L, myTree);							\
-        WriteTexText("\\right)\\right)^{\\prime}");							\
-        WriteTexText("\n\\end{equation}");							
-
-#define TEX_DIF_SIN(CurrentNode, myTree) \
-		WriteCringeStart();										\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(cos\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("sin\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\cdot\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");		
-
-#define TEX_DIF_COS(CurrentNode, myTree) \
-		WriteCringeStart();											\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(cos\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("-sin\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\cdot\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_TG(CurrentNode, myTree) \
-		WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(tg\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\frac{1}{cos\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{2}}\\cdot\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_CTG(CurrentNode, myTree) \
-    	WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(ctg\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("-\\frac{1}{sin\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\left)^{2}}\\cdot\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");
-
-#define TEX_DIF_LN(CurrentNode, myTree) \
-		WriteCringeStart();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\left(ln\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");							\
-    	WriteCringeEnd();							\
-    	WriteTexText("\n\\begin{equation}\n");							\
-    	WriteTexText("\\frac{1}{");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("}\\cdot\\left(");							\
-    	WriteTexNode(L, myTree);							\
-    	WriteTexText("\\right)^{\\prime}");							\
-    	WriteTexText("\n\\end{equation}");
+#ifdef DEBUG_LOG_TEX
+	#define TEX_DIF_NUM(CurrentNode, myTree) \
+			tex_dif_num(CurrentNode, myTree);
+	#define TEX_DIF_VAR(CurrentNode, myTree) \
+			tex_dif_var(CurrentNode, myTree);
+	#define TEX_DIF_ADD(CurrentNode, myTree) \
+			tex_dif_add(CurrentNode, myTree);
+	#define TEX_DIF_SUB(CurrentNode, myTree) \
+			tex_dif_sub(CurrentNode, myTree);
+	#define TEX_DIF_MUL(CurrentNode, myTree) \
+			tex_dif_mul(CurrentNode, myTree);
+	#define TEX_DIF_DIV(CurrentNode, myTree) \
+			tex_dif_div(CurrentNode, myTree);
+	#define TEX_DIF_POW_VAR_NUM(CurrentNode, myTree) \
+			tex_dif_pow_var_num(CurrentNode, myTree);	
+	#define TEX_DIF_POW_NUM_VAR(CurrentNode, myTree) \
+			tex_dif_pow_num_var(CurrentNode, myTree);
+	#define TEX_DIF_POW_XX(CurrentNode, myTree) \
+			tex_dif_pow_xx(CurrentNode, myTree);
+	#define TEX_DIF_SIN(CurrentNode, myTree) \
+			tex_dif_sin(CurrentNode, myTree);
+	#define TEX_DIF_COS(CurrentNode, myTree) \
+			tex_dif_cos(CurrentNode, myTree);
+	#define TEX_DIF_TG(CurrentNode, myTree) \
+			tex_dif_tg(CurrentNode, myTree);
+	#define TEX_DIF_CTG(CurrentNode, myTree) \
+			tex_dif_ctg(CurrentNode, myTree);
+	#define TEX_DIF_LN(CurrentNode, myTree) \
+			tex_dif_ln(CurrentNode, myTree);
+#else
+	#define TEX_DIF_NUM(CurrentNode, myTree) 
+	#define TEX_DIF_VAR(CurrentNode, myTree)
+	#define TEX_DIF_ADD(CurrentNode, myTree)
+	#define TEX_DIF_SUB(CurrentNode, myTree)
+	#define TEX_DIF_MUL(CurrentNode, myTree)
+	#define TEX_DIF_DIV(CurrentNode, myTree)
+	#define TEX_DIF_POW_NUM_VAR(CurrentNode, myTree)
+	#define TEX_DIF_POW_VAR_NUM(CurrentNode, myTree)
+	#define TEX_DIF_POW_XX(CurrentNode, myTree)
+	#define TEX_DIF_SIN(CurrentNode, myTree)
+	#define TEX_DIF_COS(CurrentNode, myTree)
+	#define TEX_DIF_TG(CurrentNode, myTree)
+	#define TEX_DIF_CTG(CurrentNode, myTree)
+	#define TEX_DIF_LN(CurrentNode, myTree)
+#endif
 
 #endif

@@ -49,25 +49,25 @@ EnumOfErrors TreeCalculating(BinaryTree_t* myTree)
 
 static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree)
 {
-    if (!CurrentNode) 
+    if (!C) 
     {
         return NAN;
     }
-    if (CurrentNode->Type == NUMBER)
+    if (C->Type == NUMBER)
     {
         return CurrentNode->Value.Number;
     }
-    if (CurrentNode->Type == VARIABLE)
+    if (C->Type == VARIABLE)
     {
-        return myTree->Variables[CurrentNode->Value.Index].Number;
+        return myTree->Variables[C->Value.Index].Number;
     }
     //TODO: optimization for unary operators
-    double LeftNumber  = RecEvaluate(CurrentNode->Left, myTree);
-    double RightNumber = RecEvaluate(CurrentNode->Right, myTree);
+    double LeftNumber  = RecEvaluate(C->Left, myTree);
+    double RightNumber = RecEvaluate(C->Right, myTree);
 
-    if (CurrentNode->Type == OPERATOR)
+    if (C->Type == OPERATOR)
     {
-        return Operators[CurrentNode->Value.Index].Operation(LeftNumber, RightNumber); //TODO: DSL
+        return Operators[C->Value.Index].Operation(LeftNumber, RightNumber); //TODO: DSL
     }
 
     MYASSERT(0, ERR_UNKNOWN_TYPE, return NAN);
@@ -98,40 +98,40 @@ EnumOfErrors TreeOptimize(BinaryTree_t* myTree)
 //TODO: If unary fnctions has right tree
 static EnumOfErrors RecOptimizeNeutral(Node_t* CurrentNode, BinaryTree_t* myTree)
 {
-    if (!CurrentNode) {return ERR_OK;}
-    if (CurrentNode->Type == OPERATOR)
+    if (!C) {return ERR_OK;}
+    if (C->Type == OPERATOR)
     {
-        switch (Operators[CurrentNode->Value.Index].Name[0])
+        switch (Operators[C->Value.Index].Name[0])
         {
             //TODO: DSL
             case '+': 
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}            
+                if ((L->Type == NUMBER) && (Compare(L->Value.Number, 0))) {DeleteNeutralNode(L, R, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 0))) {DeleteNeutralNode(R, L, myTree); myTree->ChangeOptimize=1; return ERR_OK;}            
             break;
             case '-': //-0 справа TODO: можно и для 0- менять на -1*
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree);  myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 0))) {DeleteNeutralNode(R, L, myTree);  myTree->ChangeOptimize=1; return ERR_OK;}
             break;
             case '/':
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 1))) {DeleteNeutralNode(R, L, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
             break;
             case '^':
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralBranch(CurrentNode, 1); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 1))) {DeleteNeutralNode(R, L, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((L->Type == NUMBER) && (Compare(L->Value.Number, 1))) {DeleteNeutralBranch(C, 1); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 0))) {DeleteNeutralBranch(C, 1); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((L->Type == NUMBER) && (Compare(L->Value.Number, 0))) {DeleteNeutralBranch(C, 0); myTree->ChangeOptimize=1; return ERR_OK;}
             break;
             case '*':
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 1)))  {DeleteNeutralNode(CurrentNode->Left, CurrentNode->Right, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 1))) {DeleteNeutralNode(CurrentNode->Right, CurrentNode->Left, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Left->Type  == NUMBER) && (Compare(CurrentNode->Left->Value.Number, 0)))  {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
-                if ((CurrentNode->Right->Type == NUMBER) && (Compare(CurrentNode->Right->Value.Number, 0))) {DeleteNeutralBranch(CurrentNode, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((L->Type == NUMBER) && (Compare(L->Value.Number, 1))) {DeleteNeutralNode(L, R, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 1))) {DeleteNeutralNode(R, L, myTree); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((L->Type == NUMBER) && (Compare(L->Value.Number, 0))) {DeleteNeutralBranch(C, 0); myTree->ChangeOptimize=1; return ERR_OK;}
+                if ((R->Type == NUMBER) && (Compare(R->Value.Number, 0))) {DeleteNeutralBranch(C, 0); myTree->ChangeOptimize=1; return ERR_OK;}
             break;
 
             default: break;
         }
     }
-    RecOptimizeNeutral(CurrentNode->Left, myTree);
-    RecOptimizeNeutral(CurrentNode->Right, myTree);
+    RecOptimizeNeutral(L, myTree);
+    RecOptimizeNeutral(R, myTree);
     return ERR_OK;
 }
 
@@ -158,35 +158,35 @@ static EnumOfErrors DeleteNeutralNode(Node_t* NeutralNode, Node_t* BranchNode, B
 static EnumOfErrors DeleteNeutralBranch(Node_t* CurrentNode, double NewValue)
 {
     //Почистили все что было потом
-    RecFree(CurrentNode->Left);
-    RecFree(CurrentNode->Right);
+    RecFree(L);
+    RecFree(R);
     //Замена типа узла на новое значение
-    CurrentNode->Left  = NULL;
-    CurrentNode->Right = NULL;
-    CurrentNode->Type = NUMBER;
-    CurrentNode->Value.Number = NewValue;
+    L = NULL;
+    R = NULL;
+    C->Type = NUMBER;
+    C->Value.Number = NewValue;
     return ERR_OK;
 }
 
 //2. Удаление нейтральных элементов
 static bool RecOptimizeConst(Node_t* CurrentNode, BinaryTree_t* myTree)
 {
-    if (!CurrentNode)                   return 1;
-    if (CurrentNode->Type == NUMBER)    return 1;
-    if (CurrentNode->Type == VARIABLE)  return 0;
+    if (!C)                   return 1;
+    if (C->Type == NUMBER)    return 1;
+    if (C->Type == VARIABLE)  return 0;
 
-    bool left  = RecOptimizeConst(CurrentNode->Left, myTree);
-    bool right = RecOptimizeConst(CurrentNode->Right, myTree);
+    bool left  = RecOptimizeConst(L, myTree);
+    bool right = RecOptimizeConst(R, myTree);
 
-    if (left && right && (CurrentNode->Type == OPERATOR))
+    if (left && right && (C->Type == OPERATOR))
     {
-        CurrentNode->Type         = NUMBER;
-        if (Operators[CurrentNode->Value.Index].TypeOperator) CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, CurrentNode->Right->Value.Number);
-        else CurrentNode->Value.Number = Operators[CurrentNode->Value.Index].Operation(CurrentNode->Left->Value.Number, NAN);
-        free(CurrentNode->Left);
-        free(CurrentNode->Right);
-        CurrentNode->Left  = NULL;
-        CurrentNode->Right = NULL;
+        C->Type         = NUMBER;
+        if (Operators[C->Value.Index].TypeOperator) C->Value.Number = Operators[C->Value.Index].Operation(L->Value.Number, R->Value.Number);
+        else C->Value.Number = Operators[C->Value.Index].Operation(L->Value.Number, NAN);
+        free(L);
+        free(R);
+        L = NULL;
+        R = NULL;
         myTree->ChangeOptimize=1;
         return 1;   
     }
@@ -203,15 +203,14 @@ static bool Compare (double x, double y)
 
 static void RecFree (Node_t* CurrentNode)
 {
-    MYASSERT(CurrentNode, ERR_BAD_POINTER_NODE, return)
-
-    if (CurrentNode->Left)
+    MYASSERT(C, ERR_BAD_POINTER_NODE, return)
+    if (L)
     {
-        RecFree (CurrentNode->Left);
+        RecFree (L);
     }
-    if (CurrentNode->Right)
+    if (R)
     {
-        RecFree (CurrentNode->Right);
+        RecFree (R);
     }
     free(CurrentNode);
 }
@@ -227,27 +226,25 @@ EnumOfErrors TreeDifferentiate(BinaryTree_t* myTree)
     myTree->Root = RecDiff(myTree->Root, myTree);
     RecFree(OldRoot);//очищаю старое
     fprintf(stdout, CYAN "\nDone!\n" RESET);
-    TreeOptimize(myTree);
-    GetTexSizeTree(myTree);
     return ERR_OK;
 }
 
 Node_t* RecDiff(Node_t* CurrentNode, BinaryTree_t* myTree)
 {
     //WriteFormula(myTree);
-    if (CurrentNode->Type == NUMBER) //Производная константы 0
+    if (C->Type == NUMBER) //Производная константы 0
     {
         TEX_DIF_NUM(CurrentNode, myTree)
         return NUM(0);
     }
-    if (CurrentNode->Type == VARIABLE) //если просто узел с x то 1
+    if (C->Type == VARIABLE) //если просто узел с x то 1
     {
         TEX_DIF_VAR(CurrentNode, myTree)
         return NUM(1);
     }
-    if (CurrentNode->Type == OPERATOR)
+    if (C->Type == OPERATOR)
     {
-        return Operators[CurrentNode->Value.Index].DiffOperation(myTree, CurrentNode);
+        return Operators[C->Value.Index].DiffOperation(myTree, C);
     }
     MYASSERT(0, ERR_REC_DIFF, return NULL)
 }
