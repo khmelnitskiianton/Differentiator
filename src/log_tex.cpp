@@ -685,13 +685,13 @@ void GenerateGraphic(void)
     CloseFile(FileLogPython);
 
     system("python3 " FOLDER_LOG_TEX "/" FILE_LOG_PYTHON);
-    WriteTexText("Для большей наглядности(очевидности) построим график этой элементарщины:\\\\\n");
-    WriteTexText("\\begin{figure}[!h]\n"
+    WriteTexText("Для большей наглядности(очевидности) построим график этой элементарщины:\n");
+    WriteTexText("\\begin{figure}[h!]\n"
                  "\\centering\n"
-                 "\\includegraphics[scale=0.6]{" FILE_LOG_GRAPHIC "}\n"
+                 "\\includegraphics[scale=0.49]{" FILE_LOG_GRAPHIC "}\n"
                  "\\caption{\\href{https://youtu.be/dQw4w9WgXcQ?si=uVgA9WMINchWAf3T}{График функции $f(x)$}}\n"
-                 "\\label{fig:graphic}\n"
-                 "\\end{figure}\n");
+                 "\\end{figure}\n"
+                 "\\newpage\n");
 }
 
 //========================================================================================================
