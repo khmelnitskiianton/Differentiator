@@ -67,8 +67,13 @@ void  _WriteChanges(BinaryTree_t* myTree);
 #define FOLDER_LOG_TEX "tex"
 #define FILE_LOG_TEX "tex/matan_book.tex"
 #define FILE_LOG_OUT "tex/matan_book.pdf"
+#define FILE_LOG_GRAPHIC "graphic.png"
+#define FILE_LOG_DOTS "dots.txt"
+#define FILE_LOG_PYTHON "drawer.py"
 
-const double SIZE_LIMIT = 70;
+const double SIZE_LIMIT     = 70;
+const int RIGHT_EDGE = 100;
+const int LEFT_EDGE = -RIGHT_EDGE;
 
 //функции для вывода теха
 void tex_dif_num			(Node_t* CurrentNode, BinaryTree_t* myTree);

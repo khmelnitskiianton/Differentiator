@@ -70,6 +70,8 @@ const int SIZE_OF_CRINGE_END   = sizeof(CringeEnd)/sizeof(CringeEnd[0]); //ра�
 
 //статические глобалки, гораздо удобнее в рамках логов, иначе везде +1 парам
 static FILE*  FileLogTex     = NULL;
+static FILE*  FileLogPython  = NULL;
+static FILE*  FileLogDots    = NULL;
 static const  size_t  SIZE_OF_BUFFER = 100;
 
 //статик функции
@@ -83,6 +85,10 @@ static double Maxi               (double x, double y);
 static char   InsertChange       (Node_t* CurrentNode, BinaryTree_t* myTree);
 static bool   CheckForChangeLeft (Node_t* CurrentNode);
 static bool   CheckForChangeRight(Node_t* CurrentNode);
+static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree, double x);
+void GenerateGraphic(void);
+void GeneratePyDots(BinaryTree_t* myTree);
+
 
 void _PrintLogTexStart (void)
 {
@@ -91,9 +97,11 @@ void _PrintLogTexStart (void)
     { 
         system("mkdir " FOLDER_LOG_TEX);
         system("touch " FILE_LOG_TEX);
+        system("touch " FOLDER_LOG_TEX "/" FILE_LOG_PYTHON);
+        system("touch " FOLDER_LOG_TEX "/" FILE_LOG_DOTS);
     }
 
-    FileLogTex = OpenFile (FILE_LOG_TEX, "w");
+    FileLogTex     = OpenFile (FILE_LOG_TEX, "w");
 
     fprintf(FileLogTex,
     "\\documentclass[a4paper, 12pt]{article}\n"
@@ -153,6 +161,8 @@ void _PrintLogTexStart (void)
     "\\rhead{\\textit{Правильный матан}}\n"
     "\\lhead{\\textit{Хмельницкий А.А}}\n"
     "\\rfoot{}\n"
+    "\\captionsetup[figure]{name=Рисунок}\n"
+    "\\captionsetup[table]{name=Таблица}\n"
     "\\thispagestyle{empty}\n"
     "\\begin{center}\n"
     "\\large{«Московский физкультурно-туристический институт»} \\\\  \n"
@@ -165,8 +175,8 @@ void _PrintLogTexStart (void)
     "\\vspace*{1cm}\n"
     "\\begin{flushright}\n"
     "\\large{\n"
-    "\\textbf{Выполнил:} \\\\ \\textit{Хмельницкий А. А., БО1-306} \\\\\n"
-    "\\textbf{Консультант:} \\\\ \\textit{Дединский И. Р. (aka ded32)}\n"
+    "\\textbf{Выполнил:} \\\\ \\textit{\\href{https://www.youtube.com/watch?v=kk3_5AHEZxE}{Хмельницкий А. А., БО1-306(aka khmelnitskiianton)}} \\\\\n"
+    "\\textbf{Консультант:} \\\\ \\textit{\\href{https://www.youtube.com/watch?v=cdX8r3ZSzN4}{Дединский И. Р. (aka ded32)}}\n"
     "}\n"
     "\\end{flushright}\n"
     "\\vspace*{10cm}\n"
@@ -208,7 +218,7 @@ static void CloseFile (FILE* file_text)
 
 static void GeneratePdf (void)
 {
-    system("pdflatex --output-directory=" FOLDER_LOG_TEX " " FILE_LOG_TEX " " FILE_LOG_OUT " >/dev/null");
+    system("pdflatex --output-directory=" FOLDER_LOG_TEX " " FILE_LOG_TEX " " FILE_LOG_OUT ">/dev/null");//>/dev/null
 }
 
 void _WriteTexFormula (BinaryTree_t* myTree)
@@ -466,7 +476,11 @@ void _WriteTexCalculating(double result, BinaryTree_t* myTree)
     WriteTexText("\n\\end{center}");
     WriteTexText("\nОчевидно, что оно будет равно: ");
     WriteTexNumber(result);
-    WriteTexText(" \\\\\n");
+    WriteTexText(" \\\\\n\n");
+
+    GeneratePyDots(myTree);
+    GenerateGraphic();
+    WriteTexText("\n\n");
 }
 
 void _WriteTexDifferentiate(BinaryTree_t* myTree)
@@ -604,7 +618,85 @@ void _WriteChanges(BinaryTree_t* myTree)
 }
 
 //========================================================================================================
+//Python graphics
+
+static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree, double x)
+{
+    if (!C) 
+    {
+        return NAN;
+    }
+    if (C->Type == NUMBER)
+    {
+        return CurrentNode->Value.Number;
+    }
+    if (C->Type == VARIABLE)
+    {
+        return x;
+    }
+    double LeftNumber  = RecEvaluate(C->Left, myTree, x);
+    double RightNumber = RecEvaluate(C->Right, myTree, x);
+    if (C->Type == OPERATOR)
+    {
+        return Operators[C->Value.Index].Operation(LeftNumber, RightNumber);
+    }
+    MYASSERT(0, ERR_UNKNOWN_TYPE, return NAN);
+}  
+
+void GeneratePyDots(BinaryTree_t* myTree)
+{
+    FileLogDots = OpenFile (FOLDER_LOG_TEX "/" FILE_LOG_DOTS, "w");
+    double current_x = NAN;
+    double current_y = NAN;
+    for (int i = LEFT_EDGE; i < RIGHT_EDGE; i++)
+    {           
+        current_x = ((double) i) / 5;          //[LEFT_EDGE/10; RIGHT_EDGE/10]
+        current_y = RecEvaluate(myTree->Root, myTree, current_x);
+        if (Compare(current_y, 0)) break;
+        if (isnan(current_y)) continue;
+        fprintf(FileLogDots, "%.2lf\t%.4lf\n", current_x, RecEvaluate(myTree->Root, myTree, current_x)); //x y in .txt
+    }
+    CloseFile(FileLogDots);
+}
+
+void GenerateGraphic(void)
+{
+    FileLogPython = OpenFile (FOLDER_LOG_TEX "/" FILE_LOG_PYTHON, "w");
+    fprintf(FileLogPython, 
+        "import matplotlib.pyplot as plt\n"
+        "plt.figure(figsize=(11,11))\n"
+        "plt.title('График функции f(x)')\n"
+        "plt.ylabel('f(x)')\n"
+        "plt.xlabel('x')\n\n"
+        "x = []\n"
+        "y = []\n"
+        "file = open('"FOLDER_LOG_TEX "/" FILE_LOG_DOTS "', 'r')\n"
+        "while (line := file.readline()):\n"
+        "\ts = line.split()\n"
+        "\tif (len(s) != 0):\n"
+        "\t\tx.append(float(s[0]))\n"
+        "\t\ty.append(float(s[1]))\n\n"
+        "plt.plot(x, y, color = 'g')\n"
+        "plt.grid(visible = True, which='major', axis='both', alpha=1)\n"
+        "plt.grid(visible = True, which='minor', axis='both', alpha=1)\n"
+        "plt.savefig('" FOLDER_LOG_TEX "/" FILE_LOG_GRAPHIC "')\n"
+        "file.close()\n"
+    );
+    CloseFile(FileLogPython);
+
+    system("python3 " FOLDER_LOG_TEX "/" FILE_LOG_PYTHON);
+    WriteTexText("Для большей наглядности(очевидности) построим график этой элементарщины:\\\\\n");
+    WriteTexText("\\begin{figure}[!h]\n"
+                 "\\centering\n"
+                 "\\includegraphics[scale=0.6]{" FILE_LOG_GRAPHIC "}\n"
+                 "\\caption{\\href{https://youtu.be/dQw4w9WgXcQ?si=uVgA9WMINchWAf3T}{График функции $f(x)$}}\n"
+                 "\\label{fig:graphic}\n"
+                 "\\end{figure}\n");
+}
+
 //========================================================================================================
+//========================================================================================================
+//Functions of printing latex formuls while differentiate
 
 void tex_dif_num(Node_t* CurrentNode, BinaryTree_t* myTree)
 {

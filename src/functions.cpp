@@ -42,7 +42,6 @@ EnumOfErrors TreeCalculating(BinaryTree_t* myTree)
 {
     double result = RecEvaluate(myTree->Root, myTree);
     printf(CYAN "\nResult: %lf\n" RESET, result);
-    
     WriteTexCalculating(result, myTree);
     return ERR_OK;
 }
@@ -67,7 +66,7 @@ static double RecEvaluate(Node_t* CurrentNode, BinaryTree* myTree)
 
     if (C->Type == OPERATOR)
     {
-        return Operators[C->Value.Index].Operation(LeftNumber, RightNumber); //TODO: DSL
+        return Operators[C->Value.Index].Operation(LeftNumber, RightNumber); 
     }
 
     MYASSERT(0, ERR_UNKNOWN_TYPE, return NAN);

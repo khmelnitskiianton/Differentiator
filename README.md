@@ -35,16 +35,23 @@ make
 Logs using Graphviz to vizualize binary tree!(you can turn them off) 
 
 ```c
-$ sudo apt install graphviz
+sudo apt install graphviz
 ```
 
 Tex logs using TeXLive to make a math book of cringe differentiating!(you can turn them off) 
 
 ```c
-$ sudo apt install texlive
+sudo apt install texlive
 ```
 
-It uses command `pdflatex ...`
+Also logs using Python3 and Matplotlib to generate graphic in math book!
+
+```c
+sudo apt install python3
+pip install matplotlib
+```
+
+It uses command `pdflatex ...` `python3 ...`
 
 ## Using
 
@@ -91,7 +98,7 @@ Checking tree for loops and other errors. Functions returns EnumOfErrors
 
 `log_tex.cpp` `log_tex.h`
 
-My program generates logs in pdf with tex! So, you can see in `tex/` file `matan_book.pdf` - it is funny generated math book!
+My program generates logs in pdf with tex and python graphic! So, you can see in `tex/` file `matan_book.pdf` - it is funny generated math book!
 
 It write every steps in differentiating with cringe phrases, in the and it adds changings(security from overflowing formula in one line)!
 

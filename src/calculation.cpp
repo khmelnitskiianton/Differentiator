@@ -49,7 +49,7 @@ Node_t* _dif_mul(BinaryTree_t* myTree, Node_t* CurrentNode)
 double _div(const double a, const double b)
 {
     bool check_div_zero = Compare(b,0);
-    USER_ERROR(!check_div_zero, ERR_DIV_ZERO, exit(0))
+    if(check_div_zero) return NAN;
     return a / b;
 }
 
@@ -62,8 +62,7 @@ Node_t* _dif_div(BinaryTree_t* myTree, Node_t* CurrentNode)
 double _pow(const double a, const double b)
 {
     bool check_pow_nan = Compare(b,0);
-    USER_ERROR(!check_pow_nan, ERR_POW_NAN, exit(0))
-    //TODO: a<0 && b != double
+    if(check_pow_nan) return NAN;
     return pow(a, b);
 }
 
@@ -123,7 +122,7 @@ double _tg(const double a, const double b)
 {
     UNUSED(b);
     bool check_div_zero = Compare(cos(a),0);
-    USER_ERROR(!check_div_zero, ERR_DIV_ZERO, exit(0))
+    if(check_div_zero) return NAN;
     return sin(a)/cos(a);
 }
 
@@ -137,7 +136,7 @@ double _ctg(const double a, const double b)
 {
     UNUSED(b);
     bool check_div_zero = Compare(sin(a),0);
-    USER_ERROR(!check_div_zero, ERR_DIV_ZERO, exit(0))
+    if(check_div_zero) return NAN;
     return cos(a)/sin(a);
 }
 
@@ -150,7 +149,7 @@ Node_t* _dif_ctg(BinaryTree_t* myTree, Node_t* CurrentNode)
 double _ln(const double a, const double b)
 {
     UNUSED(b);
-    USER_ERROR(a > 0, ERR_LOG_MINUS, exit(0))
+    if (!(a > 0)) return NAN;
     return log(a);
 }
 
@@ -183,6 +182,7 @@ static void RecFree (Node_t* CurrentNode)
     free(CurrentNode);
 }
 
+//TODO:
 // static bool RecCheckAllNum(Node_t* CurrentNode)
 // {
 
