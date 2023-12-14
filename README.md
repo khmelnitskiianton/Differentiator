@@ -22,7 +22,7 @@ To start program you need to use CMake and run program
 3.  Run CMake (compile program), write command in main directory in repo
 4.  Run program(before you need to create this file) 
 ```c
-git clone https://github.com/khmelnitskiianton/Akinator.git
+git clone https://github.com/khmelnitskiianton/Differentiator.git
 cd ./Differentiator
 cmake .
 make
@@ -48,7 +48,8 @@ Also logs using Python3 and Matplotlib to generate graphic in math book!
 
 ```c
 sudo apt install python3
-pip install matplotlib
+python3 -m pip install -U pip
+python3 -m pip install -U matplotlib
 ```
 
 It uses command `pdflatex ...` `python3 ...`
