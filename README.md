@@ -6,11 +6,8 @@ So you need to write formula to a file, enter variables and my program calculate
 ## Table of Contents
 
 - [Installation](#installation)
-- [Extra programs](#extra-programs)
+- [Dependent Objects](#dependent-objects)
 - [Using](#using)
-- [Options of compiling](#options-of-compiling)
-- [Myassert](#myassert)
-- [Verificator](#verificator)
 - [Logs](#logs)
 
 ## Installation
@@ -30,7 +27,7 @@ make
 ```
 5. Write formula, write variables and check `tex/matan_book.pdf`!!!
 
-## Extra programs
+## Dependent Objects
 
 Logs using Graphviz to vizualize binary tree!(you can turn them off) 
 
@@ -67,33 +64,19 @@ The main rules in writing formuls are:
 2. All arguments must be `_` or another arguments `(...)` and have brackets! 
 3. If function is unary (one arg), write it in the left and right side is `_`
 
-Types in formula:
+**Types in formula**:
 
 1. Double number
 2. Operators(Binary, unary): `+-*/^`, `sin cos tg ctg ln`
 3. Variables
 
-## Options of compiling
+**Example of generated book**:
 
-DEBUG_LOG 
-
-DEBUG_TEX_LOG
-
-DEBUG_MYASSERT 
-
-DEBUG_VERIFY 
-
-## Myassert
-
-`myassert.h`
-
-Now it relized like MYASSERT() that take all errors with enum and write it to console
-
-## Verificator
-
-`verificator.cpp` `verificator.h` 
-
-Checking tree for loops and other errors. Functions returns EnumOfErrors 
+<object data="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf">
+        <p>Oh! This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
 
 ## Logs
 
@@ -109,4 +92,6 @@ Logs use GraphViz to vizualized graphs in pictures
 
 After generating image it includes to html file `log.html`
 
-![Пример графического лога!](https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log.svg)
+**Example**:
+
+<img src="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log.svg" width=50% >
