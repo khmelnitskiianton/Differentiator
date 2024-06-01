@@ -1,7 +1,13 @@
 # Differentiator
 
-Program analyses math functions and generates formuls based on binary tree(in .tex and .dot)!
+Program analyzes math functions and generates formulas based on binary tree (in .tex and .dot)!
 So you need to write formula to a file, enter variables and my program calculates it!
+
+System: x86-64 Linux
+
+**Example of differentiating and generated math book**:
+
+<img src="https://github.com/khmelnitskiianton/Differentiator/blob/main/example.gif" width=100%>
 
 ## Table of Contents
 
@@ -18,25 +24,25 @@ To start program you need to use CMake and run program
 2.  Compile CMake, write command in main directory in repo
 3.  Run CMake (compile program), write command in main directory in repo
 4.  Run program(before you need to create this file) 
+
 ```c
 git clone https://github.com/khmelnitskiianton/Differentiator.git
 cd ./Differentiator
 cmake .
 make
-./differentiator.exe <file_to_read_formula>.txt
+./diff.elf <file_to_read_formula>.txt
 ```
-5. Write formula, write variables and check `tex/matan_book.pdf`!!!
+1. Write formula, write variables and check `tex/math_book.pdf`!!!
 
 ## Dependent Objects
 
-Logs using Graphviz to vizualize binary tree!(you can turn them off) 
+Logs using Graphviz to visualize binary tree!(you can turn them off) 
 
 ```c
 sudo apt install graphviz
 ```
 
-Tex logs using TeXLive to make a math book of cringe differentiating!(you can turn them off) 
-
+Logs using TeXLive to make a math book of cringe differentiation!(you can turn them off)
 ```c
 sudo apt install texlive
 ```
@@ -53,16 +59,16 @@ It uses command `pdflatex ...` `python3 ...`
 
 ## Using
 
-My program took only formuls with right grammatic.
+My program took only formulas with correct grammar.
 
-Pattern is(in example_formula.txt):
+The pattern is (in example_formula.txt):
 
 `( ( ((_ x _)+ (_1_))ln _) ^(_x_) )`
 
-The main rules in writing formuls are:
-1. Every types of spaces is ignoring
-2. All arguments must be `_` or another arguments `(...)` and have brackets! 
-3. If function is unary (one arg), write it in the left and right side is `_`
+The main rules for writing formulas are
+1. All types of spaces are ignored.
+2. All arguments must be `_` or other arguments `(...)` and have parentheses! 
+3. If function is unary (one arg), write it in left and right side is `_`.
 
 **Types in formula**:
 
@@ -70,27 +76,19 @@ The main rules in writing formuls are:
 2. Operators(Binary, unary): `+-*/^`, `sin cos tg ctg ln`
 3. Variables
 
-**Example of generated book**:
-
-<object data="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf">
-        <p>Oh! This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/khmelnitskiianton/Differentiator/blob/main/example_log_tex.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
-
 ## Logs
 
 `log_tex.cpp` `log_tex.h`
 
-My program generates logs in pdf with tex and python graphic! So, you can see in `tex/` file `matan_book.pdf` - it is funny generated math book!
+My program generates logs in pdf with tex and python graphic! So, you can see in `tex/` file `math_book.pdf` - it is funny generated math book!
 
-It write every steps in differentiating with cringe phrases, in the and it adds changings(security from overflowing formula in one line)!
+It write every steps in differentiating with cringe phrases, in the and it adds changing(security from overflowing formula in one line)!
 
 `log.cpp` `log.h`
 
-Logs use GraphViz to vizualized graphs in pictures
+Logs use GraphViz to visualize graphs in images
 
-After generating image it includes to html file `log.html`
+After creating the image it is included in the html file `log.html`
 
 **Example**:
 

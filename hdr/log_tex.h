@@ -65,8 +65,8 @@ void  _GetTexSizeTree(BinaryTree_t* myTree);
 void  _WriteChanges(BinaryTree_t* myTree);
 
 #define FOLDER_LOG_TEX "tex"
-#define FILE_LOG_TEX "tex/matan_book.tex"
-#define FILE_LOG_OUT "tex/matan_book.pdf"
+#define FILE_LOG_TEX "tex/math_book.tex"
+#define FILE_LOG_OUT "tex/math_book.pdf"
 #define FILE_LOG_GRAPHIC "graphic.png"
 #define FILE_LOG_DOTS "dots.txt"
 #define FILE_LOG_PYTHON "drawer.py"
